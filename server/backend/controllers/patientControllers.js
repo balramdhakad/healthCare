@@ -1,13 +1,12 @@
 import Patient from "../models/patientModel.js";
 import User from "../models/userModel.js";
-import MedicalHistory from '../models/medicalHistoryModel.js';
-
+import MedicalHistory from "../models/medicalHistoryModel.js";
 
 //getPatientProfile is Created Already
 export const getPatientProfile = async (req, res) => {
   try {
     const patientProfile = await Patient.findOne({
-      userId: req.user.id,
+      userId: req.user._id,
     }).populate("userId", "mobileNo");
 
     if (!patientProfile) {
@@ -16,11 +15,11 @@ export const getPatientProfile = async (req, res) => {
         .json({ success: false, message: "Patient profile not found." });
     }
 
-    const isMedicalHistory = await MedicalHistory.find(patientProfile._id)
+    const isMedicalHistory = await MedicalHistory.find(patientProfile._id);
 
     //GET ALL MEDICAL HISTORY AS WELL
-    if(isMedicalHistory){
-        patientProfile.MedicalHistory = isMedicalHistory
+    if (isMedicalHistory) {
+      patientProfile.MedicalHistory = isMedicalHistory;
     }
 
     res.status(200).json({ success: true, data: patientProfile });
@@ -36,19 +35,12 @@ export const getPatientProfile = async (req, res) => {
 
 //update Patient Profile
 export const updatePatientProfile = async (req, res) => {
-  const { userId } = req.user;
-  const {
-    name,
-    email,
-    dateOfBirth,
-    gender,
-    bloodGroup,
-    address
-  } = req.body;
+  const { userId } = req.user._id;
+  const { name, email, dateOfBirth, gender, bloodGroup, address } = req.body;
 
   try {
     const updatedProfile = await Patient.findOneAndUpdate(
-      { userId: userId },
+      { userId: userId._id },
       {
         name,
         email,
@@ -83,12 +75,10 @@ export const updatePatientProfile = async (req, res) => {
   }
 };
 
-
 //create Patient Profile
 export const createPatientProfile = async (req, res) => {
-
   try {
-    const { userId } = req.user;
+    const { userId } = req.user._id;
     const { name, email, dateOfBirth, gender, bloodGroup, address } = req.body;
 
     const existingProfile = await Patient.findOne({ userId });
@@ -100,7 +90,6 @@ export const createPatientProfile = async (req, res) => {
       });
     }
 
-
     const newPatientProfile = new Patient({
       userId,
       name,
@@ -108,7 +97,7 @@ export const createPatientProfile = async (req, res) => {
       dateOfBirth,
       gender,
       bloodGroup,
-      address
+      address,
     });
 
     await newPatientProfile.save();
@@ -128,16 +117,17 @@ export const createPatientProfile = async (req, res) => {
   }
 };
 
-
 //create Medical History
 export const createMedicalHistory = async (req, res) => {
-  const { userId } = req.user._id; 
-  const { condition, diagnosisDate, treatment, notes ,doctorName} = req.body;
+  const { userId } = req.user._id;
+  const { condition, diagnosisDate, treatment, notes, doctorName } = req.body;
 
   try {
     const patientProfile = await Patient.findOne({ userId: userId });
     if (!patientProfile) {
-      return res.status(404).json({ success: false, message: 'Patient profile not found.' });
+      return res
+        .status(404)
+        .json({ success: false, message: "Patient profile not found." });
     }
 
     const newRecord = new MedicalHistory({
@@ -147,18 +137,24 @@ export const createMedicalHistory = async (req, res) => {
       treatment,
       notes,
       //doctor can be from anywhere, outside or application registered
-      doctorName
+      doctorName,
     });
 
     await newRecord.save();
 
     res.status(201).json({
       success: true,
-      message: 'Medical history record created.',
+      message: "Medical history record created.",
       data: newRecord,
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: 'Server error while update medical history.', error: error.message });
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Server error while update medical history.",
+        error: error.message,
+      });
   }
 };

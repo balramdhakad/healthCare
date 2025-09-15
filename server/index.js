@@ -1,0 +1,23 @@
+import dotenv from "dotenv"
+dotenv.config()
+
+import express from "express";
+import connectDB from "./backend/config/DBConfig.js";
+import authRoutes from "./backend/routes/authRoutes.js"
+import patientRoute from "./backend/routes/patientRoutes.js"
+
+const PORT = process.env.PORT || 5000;
+
+connectDB()
+
+const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+//routers
+app.use("/api/auth",authRoutes)
+app.use("/api/patient",patientRoute)
+
+app.listen(PORT, ()=>{
+    console.log(`SERVER IS RUNNING AT ${PORT}`)
+})

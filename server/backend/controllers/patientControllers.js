@@ -1,8 +1,9 @@
 import Patient from "../models/patientModel.js";
 import User from "../models/userModel.js";
 import MedicalHistory from "../models/medicalHistoryModel.js";
+import Appointment from "../models/appointmentModel.js";
 
-//getPatientProfile is Created Already
+//getPatientProfile if Created Already
 export const getPatientProfile = async (req, res) => {
   try {
     const patientProfile = await Patient.findOne({
@@ -140,6 +141,9 @@ export const createMedicalHistory = async (req, res) => {
       doctorName,
     });
 
+    //TODO: Add support to add file like photos , reports , bill , receipt , prescription etc by cloudinary
+    //add feild in database too 
+
     await newRecord.save();
 
     res.status(201).json({
@@ -149,12 +153,61 @@ export const createMedicalHistory = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while update medical history.",
+      error: error.message,
+    });
+  }
+};
+
+//getAll Medical History
+export const getMedicalHistory = async (req, res) => {
+  try {
+    const patientProfile = await Patient.findOne({ userId: req.user._id });
+    if (!patientProfile) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Profile not found." });
+    }
+
+    const history = await MedicalHistory.find({
+      patientId: patientProfile._id,
+    }).sort({ diagnosisDate: -1 });
+
+    res
+      .status(200)
+      .json({ success: true, count: history.length, data: history });
+  } catch (error) {
+    console.error(error);
     res
       .status(500)
       .json({
         success: false,
-        message: "Server error while update medical history.",
+        message: "Server error while fetch medical history.",
         error: error.message,
       });
+  }
+};
+
+//Get appoiment history
+export const getPatientAppointmentHistory = async (req, res) => {
+  try {
+    const patientId = req.user._id;
+
+    const appointments = await Appointment.find({ patientId })
+      .populate("doctorId", "name specialization clinicAddress")
+      .sort({ date: -1, time: -1 });
+
+    res
+      .status(200)
+      .json({ success: true, count: appointments.length, data: appointments });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while fetch patient appoinment history.",
+      error: error.message,
+    });
   }
 };

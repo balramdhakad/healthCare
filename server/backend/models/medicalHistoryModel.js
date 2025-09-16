@@ -25,6 +25,11 @@ const medicalHistorySchema = new mongoose.Schema(
     doctorName: {
       type: String,
     },
+
+    //TODO :: FILE SUPPORT , after adding multer and cloudinary
+    // image : {
+    //   type : String
+    // }
   },
   {
     timestamps: true,

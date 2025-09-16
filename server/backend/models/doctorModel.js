@@ -65,12 +65,17 @@ const doctorSchema = new mongoose.Schema(
       required: true,
     },
 
-    verified : {
-        type : Boolean,
-        required : true,
-        default : false
+    verified: {
+      type: Boolean,
+      required: true,
+      default: false,
     },
-    
+
+    //TODO :: after multer implementation
+    profilePic: {
+      type: String,
+    },
+
     availability: [availabilitySchema],
   },
   {

@@ -21,6 +21,6 @@ router.post("/medical-history", auth("patient"), createMedicalHistory);
 router.get("/medical-history", auth("patient"), getMedicalHistory);
 
 //get Appointment History
-router.post("/appointment", auth("patient"), getPatientAppointmentHistory);
+router.get("/appointment", auth("patient"), getPatientAppointmentHistory);
 
 export default router;

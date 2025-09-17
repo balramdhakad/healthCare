@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
 
-const auth = (requiredRole) => {
+const auth = (...requiredRole) => {
   return async (req, res, next) => {
     try {
       const authHeader = req.headers.authorization;
@@ -21,17 +21,20 @@ const auth = (requiredRole) => {
         return res.status(404).json({ message: "User not found" });
       }
 
-      if (user.role !== requiredRole) {
+
+      // if (user.role !== requiredRole) {
+      //   return res.status(403).json({ message: `Access denied. You must be a ${requiredRole}.` });
+      // }
+      if (!requiredRole.includes(user.role)) {
         return res.status(403).json({ message: `Access denied. You must be a ${requiredRole}.` });
       }
 
       req.user = user;
       next();
     } catch (error) {
-      console.log(error);
         return res.status(500).json({ message: "Authentication failed at auth Middleware", Error : error });
     }
   };
 };
 
-export default auth;
+export default auth

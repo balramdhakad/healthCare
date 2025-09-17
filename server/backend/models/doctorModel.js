@@ -1,32 +1,37 @@
 import mongoose from "mongoose";
 
-const availabilitySchema = new mongoose.Schema({
-  day: {
-    type: String,
-    required: true,
-    enum: [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    ],
+const availabilitySchema = new mongoose.Schema(
+  {
+    day: {
+      type: String,
+      required: true,
+      enum: [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+      ],
+    },
+    startTime: {
+      type: String,
+      required: true,
+    },
+    endTime: {
+      type: String,
+      required: true,
+    },
+    slotDuration: {
+      type: Number,
+      required: true,
+    },
   },
-  startTime: {
-    type: String,
-    required: true,
-  },
-  endTime: {
-    type: String,
-    required: true,
-  },
-  slotDuration: {
-    type: Number,
-    required: true,
-  },
-});
+  {
+    _id: false,
+  }
+);
 
 const doctorSchema = new mongoose.Schema(
   {
@@ -38,6 +43,10 @@ const doctorSchema = new mongoose.Schema(
     },
     email: {
       type: String,
+    },
+
+    mobileNo : {
+      type : Number
     },
 
     name: {
@@ -75,6 +84,8 @@ const doctorSchema = new mongoose.Schema(
     profilePic: {
       type: String,
     },
+
+    communities : [],
 
     availability: [availabilitySchema],
   },

@@ -1,21 +1,20 @@
-import mongoose from 'mongoose';
-
+import mongoose from "mongoose";
 
 const patientSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
       unique: true,
     },
 
-    email : {
-      type : String
+    email: {
+      type: String,
     },
 
-    name : {
-      type : String
+    name: {
+      type: String,
     },
 
     dateOfBirth: {
@@ -24,23 +23,27 @@ const patientSchema = new mongoose.Schema(
 
     gender: {
       type: String,
-      enum: ['Male', 'Female', 'Other'],
+      enum: ["Male", "Female", "Other"],
     },
     bloodGroup: {
       type: String,
-      enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+      enum: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
     },
     address: {
       street: String,
       city: String,
       state: String,
       zipCode: String,
-    }
+    },
+    mobileNo: {
+      type: Number,
+    },
+    communities : []
   },
   {
     timestamps: true,
   }
 );
 
-const Patient = mongoose.model('Patient', patientSchema);
+const Patient = mongoose.model("Patient", patientSchema);
 export default Patient;

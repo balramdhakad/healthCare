@@ -1,25 +1,27 @@
 import mongoose from "mongoose";
 
-
-const ratingSchema = new mongoose.Schema({
-  rating: {
-    type: Number,
-    min: 1,
-    max: 5,
-    required: true,
+const ratingSchema = new mongoose.Schema(
+  {
+    rating: {
+      type: Number,
+      min: 1,
+      max: 5,
+      required: true,
+    },
+    comment: {
+      type: String,
+      trim: true,
+      maxlength: 500,
+    },
+    ratedAt: {
+      type: Date,
+      default: Date.now,
+    },
   },
-  comment: {
-    type: String,
-    trim: true,
-    maxlength: 500,
-  },
-  ratedAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
-
-
+  {
+    _id: false,
+  }
+);
 
 const appointmentSchema = new mongoose.Schema(
   {

@@ -1,11 +1,11 @@
 import moment from "moment";
 import Doctor from "../models/doctorModel.js";
 import Appointment from "../models/appointmentModel.js";
+import User from "../models/userModel.js";
 
 export const createDoctorProfile = async (req, res) => {
   const userId = req.user._id;
   const {
-    name,
     email,
     specialization,
     experience,
@@ -24,14 +24,16 @@ export const createDoctorProfile = async (req, res) => {
     }
 
     const newDoctorProfile = new Doctor({
+      _id: userId,
       userId,
-      name,
+      name: req.user.name,
       email,
       specialization,
       experience,
       qualifications,
       clinicAddress,
       fees,
+      mobileNo: req.user.mobileNo,
       availability,
     });
 
@@ -39,9 +41,11 @@ export const createDoctorProfile = async (req, res) => {
     res
       .status(201)
       .json({ message: "Doctor profile created.", data: newDoctorProfile });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error." });
+  } catch (error) {
+    res.status(500).json({
+      message: "Server error while create profile.",
+      Error: error?.message,
+    });
   }
 };
 
@@ -61,19 +65,25 @@ export const updateDoctorProfile = async (req, res) => {
         .json({ message: "Doctor profile not found Create profile First." });
     }
 
+    if (req.body?.name) {
+      await User.findByIdAndUpdate(userId, { name: req.body.name });
+    }
+
     res
       .status(200)
       .json({ message: "Doctor profile updated.", data: updatedProfile });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error." });
+  } catch (error) {
+    res.status(500).json({
+      message: "Server error while update profile.",
+      Error: error?.message,
+    });
   }
 };
 
 //get profile
 export const getProfile = async (req, res) => {
   try {
-    const doctorProfile = await Doctor.findOne({ userId: req.user._id });
+    const doctorProfile = await Doctor.findById(req.user._id);
 
     if (!doctorProfile) {
       return res
@@ -83,7 +93,6 @@ export const getProfile = async (req, res) => {
 
     res.status(200).json({ success: true, data: doctorProfile });
   } catch (error) {
-    console.error(error);
     res.status(500).json({
       success: false,
       message: "Server error while fetch Profile.",
@@ -110,14 +119,11 @@ export const getTodayAppointments = async (req, res) => {
 
     res.status(200).json({ success: true, data: appointments });
   } catch (error) {
-    console.error(error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Server error while fetch today's appointment.",
-        Error: error?.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Server error while fetch today's appointment.",
+      Error: error?.message,
+    });
   }
 };
 
@@ -138,13 +144,10 @@ export const getDoctorAppointmentHistory = async (req, res) => {
       .status(200)
       .json({ success: true, count: appointments.length, data: appointments });
   } catch (error) {
-    console.error(error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Server error while fetch all appoinments.",
-        error: error.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Server error while fetch all appoinments.",
+      error: error.message,
+    });
   }
 };

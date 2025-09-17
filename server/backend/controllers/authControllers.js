@@ -3,11 +3,10 @@ import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
 
 const registerUser = async (req, res) => {
-    console.log(req.body)
   try {
-    const { mobileNo, password, role } = req.body;
+    const { mobileNo, password, role , name} = req.body;
 
-    if (!mobileNo || !password || !role)
+    if (!mobileNo || !password || !role || !name)
       return res.status(400).json({ message: "Fill All Fields fields" });
 
     const userExists = await User.findOne({ mobileNo });
@@ -23,6 +22,7 @@ const registerUser = async (req, res) => {
       mobileNo,
       password: hashedPassword,
       role,
+      name
     });
 
     const token = jwt.sign({ userId: user._id, role }, process.env.JWT_SECRET, {
@@ -35,13 +35,14 @@ const registerUser = async (req, res) => {
         id: user._id,
         mobileNo: user.mobileNo,
         role: user.role,
+        name : user.name
       },
     });
-
-  } catch (err) {
+  } catch (error) {
     res.status(500).json({
+      success: false,
       message: "Server error while Register User",
-      Error: err?.message,
+      Error: error?.message,
     });
   }
 };
@@ -66,12 +67,16 @@ const loginUser = async (req, res) => {
 
     res.json({
       token,
-      user: { id: user._id, mobileNo: user.mobileNo },
+      user: { id: user._id, mobileNo: user.mobileNo ,name :  user.name},
     });
-  } catch (err) {
+  } catch (error) {
     res
       .status(500)
-      .json({ message: "Server error while Login", Error: err?.message });
+      .json({
+        success: false,
+        message: "Server error while Login",
+        Error: error?.message,
+      });
   }
 };
 

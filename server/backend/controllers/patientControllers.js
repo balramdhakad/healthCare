@@ -25,23 +25,22 @@ export const getPatientProfile = async (req, res) => {
 
     res.status(200).json({ success: true, data: patientProfile });
   } catch (error) {
-    console.error(error);
     res.status(500).json({
       success: false,
       message: "Server error while fetch patient Profile.",
-      Error: error,
+      Error: error?.message,
     });
   }
 };
 
 //update Patient Profile
 export const updatePatientProfile = async (req, res) => {
-  const { userId } = req.user._id;
+  const userId = req.user._id;
   const { name, email, dateOfBirth, gender, bloodGroup, address } = req.body;
 
   try {
     const updatedProfile = await Patient.findOneAndUpdate(
-      { userId: userId._id },
+      { _id: userId },
       {
         name,
         email,
@@ -63,24 +62,31 @@ export const updatePatientProfile = async (req, res) => {
       });
     }
 
+   if (req.body?.name) {
+      await User.findByIdAndUpdate(userId, { name: req.body.name });
+    }
+
     res.status(200).json({
       success: true,
       message: "Patient profile updated.",
       data: updatedProfile,
     });
   } catch (error) {
-    console.error(error);
     res
       .status(500)
-      .json({ success: false, message: "Server error.", error: error.message });
+      .json({
+        success: false,
+        message: "Server error.",
+        Error: error?.message,
+      });
   }
 };
 
 //create Patient Profile
 export const createPatientProfile = async (req, res) => {
   try {
-    const { userId } = req.user._id;
-    const { name, email, dateOfBirth, gender, bloodGroup, address } = req.body;
+    const userId = req.user._id;
+    const { email, dateOfBirth, gender, bloodGroup, address } = req.body;
 
     const existingProfile = await Patient.findOne({ userId });
     if (existingProfile) {
@@ -92,13 +98,15 @@ export const createPatientProfile = async (req, res) => {
     }
 
     const newPatientProfile = new Patient({
+      _id: userId,
       userId,
-      name,
+      name : req.user.name,
       email,
       dateOfBirth,
       gender,
       bloodGroup,
       address,
+      mobileNo: req.user.mobileNo,
     });
 
     await newPatientProfile.save();
@@ -109,22 +117,21 @@ export const createPatientProfile = async (req, res) => {
       data: newPatientProfile,
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({
       success: false,
       message: "Server error while create Patient Profile",
-      error: error.message,
+      Error: error?.message,
     });
   }
 };
 
 //create Medical History
 export const createMedicalHistory = async (req, res) => {
-  const { userId } = req.user._id;
+  const userId = req.user._id;
   const { condition, diagnosisDate, treatment, notes, doctorName } = req.body;
 
   try {
-    const patientProfile = await Patient.findOne({ userId: userId });
+    const patientProfile = await Patient.findById(userId);
     if (!patientProfile) {
       return res
         .status(404)
@@ -137,12 +144,11 @@ export const createMedicalHistory = async (req, res) => {
       diagnosisDate,
       treatment,
       notes,
-      //doctor can be from anywhere, outside or application registered
-      doctorName,
+      doctorName, //doctor can be from anywhere, outside or application registered
     });
 
     //TODO: Add support to add file like photos , reports , bill , receipt , prescription etc by cloudinary
-    //add feild in database too 
+    //add feild in database too
 
     await newRecord.save();
 
@@ -152,11 +158,10 @@ export const createMedicalHistory = async (req, res) => {
       data: newRecord,
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({
       success: false,
       message: "Server error while update medical history.",
-      error: error.message,
+      Error: error?.message,
     });
   }
 };
@@ -179,14 +184,11 @@ export const getMedicalHistory = async (req, res) => {
       .status(200)
       .json({ success: true, count: history.length, data: history });
   } catch (error) {
-    console.error(error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Server error while fetch medical history.",
-        error: error.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Server error while fetch medical history.",
+      error: error.message,
+    });
   }
 };
 
@@ -203,11 +205,10 @@ export const getPatientAppointmentHistory = async (req, res) => {
       .status(200)
       .json({ success: true, count: appointments.length, data: appointments });
   } catch (error) {
-    console.error(error);
     res.status(500).json({
       success: false,
       message: "Server error while fetch patient appoinment history.",
-      error: error.message,
+      Error: error?.message,
     });
   }
 };

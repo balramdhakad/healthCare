@@ -27,8 +27,11 @@ export const requestAppointment = async (req, res) => {
       .status(201)
       .json({ success: true, message: "Appointment requested successfully." });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: "Server error." });
+    res.status(500).json({
+      success: false,
+      message: "Server error while appointment booking.",
+      Error: error?.message,
+    });
   }
 };
 
@@ -38,7 +41,11 @@ export const approveAppointment = async (req, res) => {
     const { id } = req.params;
     const doctorId = req.user._id;
 
+    let token;
+    if (req.body?.tokenNo) token = req.body?.tokenNo || null;
+
     const appointment = await Appointment.findById(id);
+
     if (!appointment) {
       return res
         .status(404)
@@ -52,11 +59,9 @@ export const approveAppointment = async (req, res) => {
     }
 
     appointment.isApproved = true;
-    //token assign by doctor
-    if (req.body.tokenNo) appointment.tokenNo = req.body.tokenNo;
 
     // default token number
-    if (!req.body.tokenNo) {
+    if (!token) {
       const approvedCount = await Appointment.countDocuments({
         doctorId,
         date: appointment.date,
@@ -64,6 +69,9 @@ export const approveAppointment = async (req, res) => {
       });
       appointment.tokenNo = approvedCount + 1;
     }
+
+    //token assign by doctor
+    if (token) appointment.tokenNo = req.body.tokenNo;
     appointment.status = "scheduled";
 
     await appointment.save();
@@ -74,8 +82,11 @@ export const approveAppointment = async (req, res) => {
       data: appointment,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: "Server error." });
+    res.status(500).json({
+      success: false,
+      message: "Server error while approve appointment .",
+      Error: error?.message,
+    });
   }
 };
 
@@ -111,7 +122,7 @@ export const updateAppointmentStatus = async (req, res) => {
 
     //only completed if approved previously
     if (status === "completed" && appointment.isApproved) {
-      appointment.status = completed;
+      appointment.status = "completed";
     }
 
     //To cancel appoinment
@@ -127,8 +138,13 @@ export const updateAppointmentStatus = async (req, res) => {
       data: appointment,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: "Server error." });
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Server error while update status of appointment.",
+        Error: error?.message,
+      });
   }
 };
 
@@ -168,8 +184,10 @@ export const submitAppointmentRating = async (req, res) => {
       });
     }
 
+ 
+
     appointment.rating = {
-      rating,
+      rating : rating,
       comment,
     };
     await appointment.save();
@@ -180,7 +198,6 @@ export const submitAppointmentRating = async (req, res) => {
       data: appointment,
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({
       success: false,
       message: "Server error while rate appointment.",

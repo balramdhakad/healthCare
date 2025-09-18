@@ -1,6 +1,7 @@
 import dotenv from "dotenv"
 dotenv.config()
 import express from "express";
+import cors from "cors"
 import connectDB from "./backend/config/DBConfig.js";
 import authRoutes from "./backend/routes/authRoutes.js"
 import patientRoute from "./backend/routes/patientRoutes.js"
@@ -9,13 +10,19 @@ import appointmentRoutes from "./backend/routes/appoinmentRoutes.js"
 import generalRoutes from "./backend/routes/generalRoutes.js"
 import community from "./backend/routes/community/communityRoutes.js"
 
+const app = express();
 const PORT = process.env.PORT || 5000;
 
 connectDB()
 
-const app = express();
+app.use(cors({
+    origin : "*"
+}))
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+
 
 //routers
 app.use("/api/auth",authRoutes)

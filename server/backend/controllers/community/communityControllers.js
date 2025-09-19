@@ -1,7 +1,7 @@
 import Community from "../../models/community/communityModel.js";
 import Post from "../../models/community/postModel.js";
-import Patient from "../../models/patientModel.js";
-import Doctor from "../../models/doctorModel.js";
+import Patient from "../../models/healthCare/patientModel.js";
+import Doctor from "../../models/healthCare/doctorModel.js";
 
 //create community
 export const createCommunity = async (req, res) => {

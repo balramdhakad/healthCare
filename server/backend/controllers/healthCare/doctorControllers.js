@@ -1,7 +1,7 @@
 import moment from "moment";
-import Doctor from "../models/doctorModel.js";
-import Appointment from "../models/appointmentModel.js";
-import User from "../models/userModel.js";
+import Doctor from "../../models/healthCare/doctorModel.js";
+import Appointment from "../../models/healthCare/appointmentModel.js";
+import User from "../../models/healthCare/userModel.js";
 
 export const createDoctorProfile = async (req, res) => {
   const userId = req.user._id;

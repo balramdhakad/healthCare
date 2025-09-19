@@ -1,5 +1,5 @@
-import Appointment from "../models/appointmentModel.js";
-import Doctor from "../models/doctorModel.js";
+import Appointment from "../../models/healthCare/appointmentModel.js";
+import Doctor from "../../models/healthCare/doctorModel.js";
 
 //getDoctorById
 export const getDoctorById = async (req, res) => {

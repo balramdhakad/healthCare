@@ -1,5 +1,5 @@
 import express from "express"
-import authControllers from "../controllers/authControllers.js"
+import authControllers from "../../controllers/healthCare/authControllers.js"
 const router = express.Router();
 
 router.post("/signup", authControllers.registerUser);

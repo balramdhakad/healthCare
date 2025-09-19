@@ -1,7 +1,7 @@
-import Patient from "../models/patientModel.js";
-import User from "../models/userModel.js";
-import MedicalHistory from "../models/medicalHistoryModel.js";
-import Appointment from "../models/appointmentModel.js";
+import Patient from "../../models/healthCare/patientModel.js";
+import User from "../../models/healthCare/userModel.js";
+import MedicalHistory from "../../models/healthCare/medicalHistoryModel.js";
+import Appointment from "../../models/healthCare/appointmentModel.js";
 
 //getPatientProfile if Created Already
 export const getPatientProfile = async (req, res) => {

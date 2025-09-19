@@ -6,8 +6,8 @@ import {
   getPatientAppointmentHistory,
   getPatientProfile,
   updatePatientProfile,
-} from "../controllers/patientControllers.js";
-import auth from "../middlewares/authMiddleware.js";
+} from "../../controllers/healthCare/patientControllers.js";
+import auth from "../../middlewares/authMiddleware.js";
 
 const router = express.Router();
 

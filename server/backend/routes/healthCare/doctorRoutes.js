@@ -1,6 +1,6 @@
 import express from 'express';
-import auth from '../middlewares/authMiddleware.js'; 
-import { createDoctorProfile ,updateDoctorProfile ,getProfile, getTodayAppointments, getDoctorAppointmentHistory} from '../controllers/doctorControllers.js';
+import auth from '../../middlewares/authMiddleware.js'; 
+import { createDoctorProfile ,updateDoctorProfile ,getProfile, getTodayAppointments, getDoctorAppointmentHistory} from '../../controllers/healthCare/doctorControllers.js';
 
 const router = express.Router();
 

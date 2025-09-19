@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { logOutUser } from "../features/auth/authSlice";
 import { IoMdClose } from "react-icons/io";
-import { RiMenuFoldLine } from "react-icons/ri";
+import { RiFontSize, RiMenuFoldLine } from "react-icons/ri";
 const Navbar = () => {
   const { userdata } = useSelector((state) => state.auth);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -85,15 +85,7 @@ const Navbar = () => {
               onClick={toggleMenu}
               className="text-gray-600 hover:text-gray-900 focus:outline-none"
             >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                {isMenuOpen ? <RiMenuFoldLine /> : <IoMdClose />}
-              </svg>
+                {isMenuOpen ?  <IoMdClose size={40}/> : < RiMenuFoldLine size={40}/>}
             </button>
           </div>
         </div>

@@ -3,7 +3,7 @@ import {
   getDoctorById,
   getTopRatedDoctors,
   searchDoctors,
-} from "../controllers/generalControllers.js";
+} from "../../controllers/healthCare/generalControllers.js";
 
 const router = express.Router();
 

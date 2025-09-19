@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import User from "../models/userModel.js";
+import User from "../models/healthCare/userModel.js";
 
 const auth = (...requiredRole) => {
   return async (req, res, next) => {

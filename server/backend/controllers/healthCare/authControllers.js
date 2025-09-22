@@ -4,7 +4,7 @@ import User from "../../models/healthCare/userModel.js";
 
 const registerUser = async (req, res) => {
   try {
-    const { mobileNo, password, role , name} = req.body;
+    const { mobileNo, password, role, name } = req.body;
 
     if (!mobileNo || !password || !role || !name)
       return res.status(400).json({ message: "Fill All Fields fields" });
@@ -22,7 +22,7 @@ const registerUser = async (req, res) => {
       mobileNo,
       password: hashedPassword,
       role,
-      name
+      name,
     });
 
     const token = jwt.sign({ userId: user._id, role }, process.env.JWT_SECRET, {
@@ -35,7 +35,7 @@ const registerUser = async (req, res) => {
         id: user._id,
         mobileNo: user.mobileNo,
         role: user.role,
-        name : user.name
+        name: user.name,
       },
     });
   } catch (error) {
@@ -67,16 +67,19 @@ const loginUser = async (req, res) => {
 
     res.json({
       token,
-      user: { id: user._id, mobileNo: user.mobileNo ,name :  user.name},
+      user: {
+        id: user._id,
+        mobileNo: user.mobileNo,
+        name: user.name,
+        role: user.role,
+      },
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Server error while Login",
-        Error: error?.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Server error while Login",
+      Error: error?.message,
+    });
   }
 };
 

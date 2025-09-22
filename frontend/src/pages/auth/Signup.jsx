@@ -1,13 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import doctorImage from "../../assets/signup.png";
 import { signupUser } from "../../features/auth/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const Signup = () => {
+  const { userdata } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-    const navigate = useNavigate()
-    const { userdata } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  
+    useEffect(() => {
+    if (userdata) {
+      navigate("/");
+    }
+  }, [userdata]);
+  
   const [formData, setFormData] = useState({
     name: "",
     mobileNo: "",
@@ -15,11 +22,7 @@ const Signup = () => {
     role: "patient",
   });
 
-  useEffect(() => {
-    if (userdata) {
-      navigate("/");
-    }
-  }, [userdata]);
+
 
   const handleChange = (e) => {
     if (e.target.name === "mobileNo" && !/^\d*$/.test(e.target.value)) {

@@ -61,6 +61,10 @@ const doctorSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    bio : {
+      type : String
+    },
+
     qualifications: {
       type: [String],
       required: true,
@@ -80,7 +84,11 @@ const doctorSchema = new mongoose.Schema(
       default: false,
     },
 
-    //TODO :: after multer implementation
+    appointmentTypes : {
+      type : [String],
+      // enum : [["physical"],["video"],["physical","video"]]
+    },
+
     profilePic: {
       type: String,
     },
@@ -95,4 +103,4 @@ const doctorSchema = new mongoose.Schema(
 );
 
 const Doctor = mongoose.model("Doctor", doctorSchema);
-export default Doctor;
+export default Doctor

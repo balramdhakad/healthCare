@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { logOutUser } from "../features/auth/authSlice";
 import { IoMdClose } from "react-icons/io";
-import { RiFontSize, RiMenuFoldLine } from "react-icons/ri";
+import { RiMenuFoldLine } from "react-icons/ri";
 const Navbar = () => {
   const { userdata } = useSelector((state) => state.auth);
   const [isMenuOpen, setIsMenuOpen] = useState(false);

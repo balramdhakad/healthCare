@@ -5,6 +5,7 @@ import User from "../../models/healthCare/userModel.js";
 
 export const createDoctorProfile = async (req, res) => {
   const userId = req.user._id;
+
   const {
     email,
     specialization,
@@ -23,6 +24,11 @@ export const createDoctorProfile = async (req, res) => {
         .json({ message: "Doctor profile already exists." });
     }
 
+    let profilePic;
+    if (req?.file) {
+      profilePic = req.file?.path;
+    }
+
     const newDoctorProfile = new Doctor({
       _id: userId,
       userId,
@@ -35,6 +41,7 @@ export const createDoctorProfile = async (req, res) => {
       fees,
       mobileNo: req.user.mobileNo,
       availability,
+      profilePic,
     });
 
     await newDoctorProfile.save();
@@ -49,13 +56,23 @@ export const createDoctorProfile = async (req, res) => {
   }
 };
 
-// Controller to update an existing doctor profile
+// update an existing doctor profile
 export const updateDoctorProfile = async (req, res) => {
+  console.log(req.file)
   try {
     const userId = req.user._id;
+    
+
+    const updateFields = { ...req.body };
+
+    if (req?.file) {
+      
+      updateFields.profilePic = req.file?.path;
+    }
+
     const updatedProfile = await Doctor.findOneAndUpdate(
       { userId },
-      { $set: req.body },
+      { $set: updateFields},
       { new: true, runValidators: true }
     );
 

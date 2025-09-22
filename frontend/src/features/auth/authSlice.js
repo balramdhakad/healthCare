@@ -47,6 +47,7 @@ const authSlice = createSlice({
         state.isSuccess = true;
         state.isLoading = false;
         state.isError = false;
+        state.userdata = action.payload
         state.message = "Signup successful!";
       })
       .addCase(signupUser.rejected, (state, action) => {

@@ -1,5 +1,5 @@
 import express from "express";
-import { createPost, addComment } from "../../controllers/community/postControllers.js";
+import { createPost, addComment, getPost } from "../../controllers/community/postControllers.js";
 import auth from "../../middlewares/authMiddleware.js";
 
 const router = express.Router({ mergeParams: true });

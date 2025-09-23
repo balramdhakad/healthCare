@@ -46,7 +46,7 @@ export const createCommunity = async (req, res) => {
 //get community
 export const getCommunities = async (req, res) => {
   try {
-    const communities = await Community.find({}).sort({ name: 1 });
+    const communities = await Community.find({}).sort({ postCount: -1 });
     res
       .status(200)
       .json({ success: true, count: communities.length, data: communities });
@@ -129,3 +129,4 @@ export const joinCommunity = async (req, res) => {
     });
   }
 };
+

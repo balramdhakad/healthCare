@@ -3,7 +3,7 @@ import image from "../../../../assets/community.png"
 
 const CommunityCard = ({community}) => (
   <Link
-    to={community._id}
+    to={`community/${community._id}`}
     className="flex-shrink-0 w-60 p-4 bg-white rounded-xl shadow-md"
   >
     <img

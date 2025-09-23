@@ -8,21 +8,24 @@ const DoctorCategoryPage = () => {
   const { specialization } = useParams();
   console.log(specialization);
   const [doctors, setDoctors] = useState([]);
+  const [alldoctors, setallDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [appointmentTypeFilter, setAppointmentTypeFilter] = useState("all");
   const [sortBy, setSortBy] = useState("experience");
+  console.log(doctors)
 
   const getFilteredAndSortedDoctors = (allDocs, typeFilter, sortType) => {
-    let filtered = allDocs;
+    let filtered = alldoctors;
 
-    if (typeFilter == "all") {
-      filtered = allDocs
-    }
+
     if (typeFilter !== "all") {
-      filtered = allDocs.filter((doc) =>
+      filtered = alldoctors.filter((doc) =>
         doc.appointmentTypes?.includes(typeFilter)
       );
+    }
+    if (typeFilter === "all") {
+      filtered = alldoctors
     }
 
     let sorted = [...filtered].sort((a, b) => {
@@ -48,6 +51,7 @@ const DoctorCategoryPage = () => {
       const data = await response.data;
       const processedDoctors = data.data.map((doc) => ({ ...doc }));
       setDoctors(processedDoctors);
+      setallDoctors(processedDoctors)
     } catch (err) {
       setError("Failed to fetch doctors. Please try again later.");
     } finally {

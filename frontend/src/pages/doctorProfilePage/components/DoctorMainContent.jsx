@@ -3,7 +3,7 @@ import { FaStar } from 'react-icons/fa';
 import Section from './Section';
 
 const DoctorMainContent = ({ doctor }) => (
-  <div className="lg:w-2/3 space-y-8">
+  <div className="lg:w-3/3 space-y-2">
     {/* About Section */}
     {doctor.bio && (
       <Section title="About">

@@ -28,9 +28,9 @@ const postSchema = new mongoose.Schema(
     comments: [
       {
         text: String,
-        patientId: {
+        userId : {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "Patient",
+          ref: "User",
         },
         createdAt: {
           type: Date,

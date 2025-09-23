@@ -4,7 +4,7 @@ import { handleLoginUser, handleSignupUser } from "./authService";
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    userdata: null,
+    userdata: JSON.parse(localStorage.getItem("user-healthCare")) ||null,
     isLoading: false,
     isSuccess: false,
     isError: false,

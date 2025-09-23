@@ -12,7 +12,7 @@ const FilterBar = ({
       <div className="flex flex-wrap justify-center gap-2">
         <button
           onClick={() => setAppointmentTypeFilter("all")}
-          className={`px-4 py-2 rounded-full font-medium transition-colors duration-200 ${
+          className={`px-4 rounded-sm font-medium transition-colors duration-200 ${
             appointmentTypeFilter === "all"
               ? "bg-blue-600 text-white shadow"
               : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -22,7 +22,7 @@ const FilterBar = ({
         </button>
         <button
           onClick={() => setAppointmentTypeFilter("physical")}
-          className={`px-4 py-2 rounded-full font-medium transition-colors duration-200 ${
+          className={`px-4 py-2 rounded-sm transition-colors duration-200 ${
             appointmentTypeFilter === "physical"
               ? "bg-blue-600 text-white shadow"
               : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -32,7 +32,7 @@ const FilterBar = ({
         </button>
         <button
           onClick={() => setAppointmentTypeFilter("video")}
-          className={`px-4 py-2 rounded-full font-medium transition-colors duration-200 ${
+          className={`px-4 py-2 rounded-sm font-medium transition-colors duration-200 ${
             appointmentTypeFilter === "video"
               ? "bg-blue-600 text-white shadow"
               : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -59,5 +59,6 @@ const FilterBar = ({
     </div>
   </div>
 );
+
 
 export default FilterBar

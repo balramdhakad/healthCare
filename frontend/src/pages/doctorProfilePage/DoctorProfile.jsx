@@ -41,10 +41,10 @@ const DoctorProfilePage = () => {
   }
 
   return (
-    <div className="bg-gray-100 min-h-screen p-8 font-sans">
+    <div className="bg-pink-100 min-h-screen p-8 font-sans">
       <div className="container mx-auto max-w-6xl">
         <div className="flex flex-col lg:flex-row gap-8">
-          <div className="lg:w-2/3 space-y-8">
+          <div className="lg:w-2/3 space-y-4">
             <DoctorHeader doctor={doctor} />
             <DoctorMainContent doctor={doctor} />
           </div>

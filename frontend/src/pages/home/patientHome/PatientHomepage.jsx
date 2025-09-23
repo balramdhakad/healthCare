@@ -10,14 +10,6 @@ import DoctorProfileCard from "./components/DoctorProfileCard";
 import TopLevelActions from "./components/TopLevelActions";
 import Footer from "../../../components/Footer";
 
-// const HorizontalCarousel = ({ title, children }) => (
-//   <div className="mb-8">
-//     <h2 className="text-xl font-bold text-gray-800 mb-4">{title}</h2>
-//     <div className="flex space-x-4 overflow-x-auto custom-scrollbar pb-2">
-//       {children}
-//     </div>
-//   </div>
-// );
 
 import React, { useRef } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';

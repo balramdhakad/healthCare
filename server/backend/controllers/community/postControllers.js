@@ -50,7 +50,6 @@ export const addComment = async (req, res) => {
         .status(404)
         .json({ success: false, message: "Post not found." });
     }
-    // Check if the user is a member of the post's community
     const community = await Community.findById(post.communityId);
     if (!community.members.includes(userId)) {
       return res.status(403).json({
@@ -66,12 +65,34 @@ export const addComment = async (req, res) => {
       data: post,
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({
+    res.status(500).json({
+      success: false,
+      message: "Server error.",
+      Error: error?.message,
+    });
+  }
+};
+
+export const getPost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const post = await Post.findById(id).populate("userId", "name").populate('comments.userId', 'name');
+    if (!post) {
+      res.status(404).json({
         success: false,
-        message: "Server error.",
-        Error: error?.message,
+        message: "Post Not Found.",
       });
+    }
+    res.status(200).json({
+      success: true,
+      message: "Post fetch success.",
+      data: post,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Server error white fetch post.",
+      Error: error?.message,
+    });
   }
 };

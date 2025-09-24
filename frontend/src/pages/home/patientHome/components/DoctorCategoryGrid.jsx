@@ -8,7 +8,7 @@ const CategoryCard = ({ icon, title, to }) => (
     to={to}
     className="flex flex-col items-center p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer"
   >
-    <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 text-gray-600">
+    <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 text-black">
       {icon}
     </div>
     <h4 className="mt-2 text-sm font-medium text-gray-700">{title}</h4>

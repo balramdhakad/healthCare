@@ -45,8 +45,8 @@ const doctorSchema = new mongoose.Schema(
       type: String,
     },
 
-    mobileNo : {
-      type : Number
+    mobileNo: {
+      type: Number,
     },
 
     name: {
@@ -61,8 +61,8 @@ const doctorSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    bio : {
-      type : String
+    bio: {
+      type: String,
     },
 
     qualifications: {
@@ -84,16 +84,17 @@ const doctorSchema = new mongoose.Schema(
       default: false,
     },
 
-    appointmentTypes : {
-      type : [String],
-      // enum : [["physical"],["video"],["physical","video"]]
+    appointmentTypes: {
+      type: [String],
+      enum: ["physical", "video"],
+      default: ["physical"],
     },
 
     profilePic: {
       type: String,
     },
 
-    communities : [],
+    communities: [],
 
     availability: [availabilitySchema],
   },
@@ -103,4 +104,4 @@ const doctorSchema = new mongoose.Schema(
 );
 
 const Doctor = mongoose.model("Doctor", doctorSchema);
-export default Doctor
+export default Doctor;

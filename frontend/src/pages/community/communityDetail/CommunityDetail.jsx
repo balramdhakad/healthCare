@@ -6,6 +6,8 @@ import LoadingBar from "../../../components/LoadingBar";
 import { useParams } from "react-router-dom";
 import PostCard from "./PostCard";
 import CreatePostForm from "./PostComment/CreatePostForm";
+import { FaDisease } from "react-icons/fa";
+import { ImProfile } from "react-icons/im";
 
 const CommunityDetail = () => {
   const { id } = useParams();
@@ -77,8 +79,8 @@ const CommunityDetail = () => {
               About this group
             </h2>
             <div className="flex items-center text-gray-600 mb-2">
-              <span role="img" aria-label="disease" className="mr-2 text-xl">
-                ⚕️
+              <span className="mr-2 text-xl">
+                <FaDisease />
               </span>
               <div className="text-base font-medium">
                 Associated Disease:{" "}
@@ -86,8 +88,8 @@ const CommunityDetail = () => {
               </div>
             </div>
             <div className="flex items-center text-gray-600">
-              <span role="img" aria-label="admin" className="mr-2 text-xl">
-                👩‍💼
+              <span className="mr-2 text-xl">
+                <ImProfile />
               </span>
               <div className="text-base font-medium">
                 Administrator:{" "}

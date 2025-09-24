@@ -77,7 +77,7 @@ const DoctorCategoryPage = () => {
   return (
     <div className="bg-slate-50 min-h-screen p-4 md:p-8">
       <div className="container mx-auto">
-        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-8 capitalize text-center">
+        <h1 className="text-sm md:text-3xl font-extrabold text-blue-600 mb-3 capitalize text-center">
           {specialization || "Doctors"}
         </h1>
         <FilterBar

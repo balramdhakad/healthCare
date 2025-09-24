@@ -22,7 +22,7 @@ const Footer = () => {
               <ul className="space-y-2 text-sm text-gray-400">
                 <li>
                   <Link
-                    to={"/"}
+                    to={"/about"}
                     className="hover:text-teal-400 transition duration-300"
                   >
                     About Us
@@ -30,7 +30,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link
-                    to={"/"}
+                    to={"/doctors"}
                     className="hover:text-teal-400 transition duration-300"
                   >
                     Find Doctor
@@ -38,7 +38,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link
-                    to={"/"}
+                    to={"/community"}
                     className="hover:text-teal-400 transition duration-300"
                   >
                     Community
@@ -46,7 +46,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link
-                    to={"/"}
+                    to={"/info/FAQs"}
                     className="hover:text-teal-400 transition duration-300"
                   >
                     FAQs
@@ -68,7 +68,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link
-                    to={"/"}
+                    to={"/info/contact"}
                     className="hover:text-teal-400 transition duration-300"
                   >
                     Contact Us
@@ -76,7 +76,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link
-                    to={"/"}
+                    to={"/info/privacypolicy"}
                     className="hover:text-teal-400 transition duration-300"
                   >
                     Privacy Policy
@@ -84,7 +84,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link
-                    to={"/"}
+                    to={"/info/termsofservice"}
                     className="hover:text-teal-400 transition duration-300"
                   >
                     Terms of Service

@@ -31,7 +31,7 @@ const CommunityPage = () => {
   );
 
   return (
-    <div className="bg-gray-100 min-h-screen font-sans antialiased text-gray-800">
+    <div className=" min-h-screen font-sans antialiased text-gray-800">
       <main className="container mx-auto px-4 py-8 max-w-5xl">
         {/* Page Header */}
         <div className="text-center mb-8">

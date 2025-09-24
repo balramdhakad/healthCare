@@ -27,9 +27,11 @@ export const createPost = async (req, res) => {
     });
     community.postCount += 1;
     await community.save();
+
+    const postData = await Post.findById(newPost._id).populate("userId","name")
     res
       .status(201)
-      .json({ success: true, message: "Post created .", data: newPost });
+      .json({ success: true, message: "Post created .", data: postData });
   } catch (error) {
     res.status(500).json({
       success: false,

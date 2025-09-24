@@ -154,17 +154,24 @@ export const getDoctorById = async (req, res) => {
 //perform searching
 export const searchDoctors = async (req, res) => {
   try {
-    const { specialization, qualifications, search } = req.query;
+    const { specialization, qualifications, search,appointmentTypes } = req.query;
 
     const query = { verified: true };
 
-    // Add filters based on provided query parameters
     if (specialization) {
       query.specialization = { $regex: new RegExp(specialization, "i") };
     }
 
     if (qualifications) {
       query.qualifications = { $in: [new RegExp(qualifications, "i")] };
+    }
+
+        if (appointmentTypes) {
+      const typesArray = Array.isArray(appointmentTypes)
+        ? appointmentTypes
+        : appointmentTypes.split(',');
+
+      query.appointmentTypes = { $in: typesArray };
     }
 
     if (search) {

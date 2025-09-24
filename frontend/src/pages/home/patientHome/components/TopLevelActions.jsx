@@ -1,9 +1,10 @@
 import { FaMapMarkerAlt, FaVideo } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
-const ActionCard = ({ title, description, icon, ctaText, to }) => (
+const ActionCard = ({ title, description, icon, ctaText, to ,state}) => (
   <Link
     to={to}
+     state={state}
     className="flex items-start p-6 bg-white rounded-xl shadow-md space-x-4 hover:shadow-lg transition-shadow duration-300"
   >
     <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-full bg-blue-100 text-blue-600">
@@ -27,6 +28,7 @@ const TopLevelActions = () => (
       icon={<FaMapMarkerAlt />}
       ctaText="Book Now"
       to="/doctors"
+      state={{ appointmentType: "physical" }}
     />
     <ActionCard
       title="Book a Virtual Consultation"
@@ -34,6 +36,7 @@ const TopLevelActions = () => (
       icon={<FaVideo />}
       ctaText="Book Now"
       to="/doctors"
+      state={{ appointmentType: "video" }}
     />
   </div>
 );

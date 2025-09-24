@@ -8,7 +8,6 @@ import KeyFeatures from "./components/KeyFeatures";
 import CommunityCard from "./components/CommunityCard";
 import DoctorProfileCard from "./components/DoctorProfileCard";
 import TopLevelActions from "./components/TopLevelActions";
-import Footer from "../../../components/Footer";
 
 
 import React, { useRef } from 'react';
@@ -88,7 +87,7 @@ const PatientHomepage = () => {
 
   return (
     <>
-      <div className="bg-gray-100 p-8 pt-20">
+      <div className=" p-8 pt-20">
         <div className="container mx-auto space-y-12">
           <TopLevelActions />
           <DoctorCategoryGrid />
@@ -118,7 +117,6 @@ const PatientHomepage = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 };

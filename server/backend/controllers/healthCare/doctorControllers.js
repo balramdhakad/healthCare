@@ -5,8 +5,11 @@ import User from "../../models/healthCare/userModel.js";
 
 export const createDoctorProfile = async (req, res) => {
   const userId = req.user._id;
+  console.log(req.body);
 
   const {
+    name,
+    mobileNo,
     email,
     specialization,
     experience,
@@ -14,7 +17,18 @@ export const createDoctorProfile = async (req, res) => {
     clinicAddress,
     fees,
     availability,
+    appointmentTypes
   } = req.body;
+
+  if (availability && typeof availability === "string") {
+    availability = JSON.parse(availability);
+  }
+  if (qualifications && typeof qualifications === "string") {
+    qualifications = JSON.parse(qualifications);
+  }
+  if (appointmentTypes && typeof appointmentTypes === "string") {
+    appointmentTypes = JSON.parse(appointmentTypes);
+  }
 
   try {
     const existingProfile = await Doctor.findOne({ userId });
@@ -29,18 +43,26 @@ export const createDoctorProfile = async (req, res) => {
       profilePic = req.file?.path;
     }
 
+        if (name) {
+      await User.findByIdAndUpdate(userId, { name: req.body.name });
+    }
+
+        if (mobileNo) {
+      await User.findByIdAndUpdate(userId, { mobileNo: req.body.mobileNo });
+    }
+
     const newDoctorProfile = new Doctor({
       _id: userId,
       userId,
-      name: req.user.name,
+      name: name || req.user.name,
       email,
       specialization,
       experience,
       qualifications,
       clinicAddress,
       fees,
-      mobileNo: req.user.mobileNo,
-      availability,
+      mobileNo: mobileNo || req.user.mobileNo,
+      availability: availability,
       profilePic,
     });
 
@@ -58,22 +80,32 @@ export const createDoctorProfile = async (req, res) => {
 
 // update an existing doctor profile
 export const updateDoctorProfile = async (req, res) => {
-  console.log(req.file)
   try {
     const userId = req.user._id;
-    
-
     const updateFields = { ...req.body };
 
+    let profilePic = "";
     if (req?.file) {
-      
-      updateFields.profilePic = req.file?.path;
+      profilePic = req.file?.path;
     }
+
+    if (updateFields.availability && typeof updateFields.availability === "string") {
+      updateFields.availability = JSON.parse(updateFields.availability);
+    }
+    if (updateFields.qualifications && typeof updateFields.qualifications === "string") {
+      updateFields.qualifications = JSON.parse(updateFields.qualifications);
+    }
+    if (updateFields.appointmentTypes && typeof updateFields.appointmentTypes === "string") {
+      updateFields.appointmentTypes = JSON.parse(updateFields.appointmentTypes);
+    }
+
+
+    updateFields.profilePic = profilePic;
 
     const updatedProfile = await Doctor.findOneAndUpdate(
       { userId },
-      { $set: updateFields},
-      { new: true, runValidators: true }
+      { $set: updateFields },
+      { new: true, runValidators: false }
     );
 
     if (!updatedProfile) {
@@ -90,6 +122,7 @@ export const updateDoctorProfile = async (req, res) => {
       .status(200)
       .json({ message: "Doctor profile updated.", data: updatedProfile });
   } catch (error) {
+    console.log(error);
     res.status(500).json({
       message: "Server error while update profile.",
       Error: error?.message,

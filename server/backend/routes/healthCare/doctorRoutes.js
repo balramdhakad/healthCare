@@ -7,7 +7,9 @@ const router = express.Router();
 
 //doctor Profile Routes
 router.post('/profile', auth('doctor'),upload.single("profilePic"), createDoctorProfile);
-router.put('/profile', auth('doctor'),upload.single("profilePic"), updateDoctorProfile);
+router.put('/profile'
+    , auth('doctor')
+,upload.single("profilePic"), updateDoctorProfile);
 router.get('/profile', auth('doctor'), getProfile);
 
 //getAll appointment history

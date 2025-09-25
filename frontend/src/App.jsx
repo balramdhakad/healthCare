@@ -28,6 +28,7 @@ import Appointments from "./pages/Appointments/Appointments";
 import MyCommunities from "./pages/MyCommunities/MyCommunities";
 import PatientHistory from "./pages/PatientHistory.jsx/PatientHistory";
 import DoctorTodaysAppointment from "./pages/DoctorTodaysAppointment/DoctorTodaysAppointment";
+import EditProfile from "./pages/Editprofile/EditProfile";
 
 function App() {
   return (
@@ -63,6 +64,7 @@ function App() {
           <Route path="/info/privacypolicy" element={<PrivacyPolicy />} />
           <Route path="/info/faqs" element={<FAQPage />} />
           <Route path="/info/contact" element={<ContactUs />} />
+          <Route path="/profile/edit" element={<EditProfile />} />
         </Routes>
         <Footer />
       </div>

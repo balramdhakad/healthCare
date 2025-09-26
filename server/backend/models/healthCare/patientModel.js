@@ -20,6 +20,9 @@ const patientSchema = new mongoose.Schema(
     dateOfBirth: {
       type: Date,
     },
+      profilePic : {
+
+  },
 
     gender: {
       type: String,
@@ -40,6 +43,7 @@ const patientSchema = new mongoose.Schema(
     },
     communities : []
   },
+
   {
     timestamps: true,
   }

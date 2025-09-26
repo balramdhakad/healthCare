@@ -84,9 +84,8 @@ export const updateDoctorProfile = async (req, res) => {
     const userId = req.user._id;
     const updateFields = { ...req.body };
 
-    let profilePic = "";
     if (req?.file) {
-      profilePic = req.file?.path;
+          updateFields.profilePic = req.file?.path;
     }
 
     if (updateFields.availability && typeof updateFields.availability === "string") {
@@ -100,7 +99,7 @@ export const updateDoctorProfile = async (req, res) => {
     }
 
 
-    updateFields.profilePic = profilePic;
+
 
     const updatedProfile = await Doctor.findOneAndUpdate(
       { userId },

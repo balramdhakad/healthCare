@@ -91,26 +91,27 @@ const Navbar = () => {
                     >
                       Appointments
                     </Link>
-                    {
-                      userdata?.user?.role === "patient" ? <Link
-                      to="patient/history"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
-                    >
-                      Medical Historty
-                    </Link> : <Link
-                      to="doctor/today"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
-                    >
-                      Today's Appointments
-                    </Link>
-                    }
+                    {userdata?.user?.role === "patient" ? (
+                      <Link
+                        to="patient/history"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
+                      >
+                        Medical Historty
+                      </Link>
+                    ) : (
+                      <Link
+                        to="doctor/today"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
+                      >
+                        Today's Appointments
+                      </Link>
+                    )}
                     <Link
                       to="/mycommunity"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
                     >
                       My Communities
                     </Link>
-                    
                   </div>
                 </div>
 
@@ -180,11 +181,11 @@ const Navbar = () => {
               Community
             </Link>
             <Link
-              to="/contact"
+              to="/about"
               onClick={toggleMenu}
               className="block w-full px-6 py-2 rounded hover:bg-blue-100 transition"
             >
-              Contact
+              About
             </Link>
             {userdata ? (
               <>
@@ -233,28 +234,30 @@ const Navbar = () => {
                       >
                         Appointments
                       </Link>
-                      {
-                        userdata?.user?.role === "patient" ? <Link
-                        to="/patient/history"
-                        onClick={() => {
-                          toggleMenu();
-                          setIsProfileOpen(false);
-                        }}
-                        className="block px-2 py-2 text-sm text-blue-800 hover:bg-blue-100 rounded transition"
-                      >
-                        Medical History
-                      </Link> : <Link
-                        to="/doctor/today"
-                        onClick={() => {
-                          toggleMenu();
-                          setIsProfileOpen(false);
-                        }}
-                        className="block px-2 py-2 text-sm text-blue-800 hover:bg-blue-100 rounded transition"
-                      >
-                        Today's appointment
-                      </Link>
-                      }
-                      
+                      {userdata?.user?.role === "patient" ? (
+                        <Link
+                          to="/patient/history"
+                          onClick={() => {
+                            toggleMenu();
+                            setIsProfileOpen(false);
+                          }}
+                          className="block px-2 py-2 text-sm text-blue-800 hover:bg-blue-100 rounded transition"
+                        >
+                          Medical History
+                        </Link>
+                      ) : (
+                        <Link
+                          to="/doctor/today"
+                          onClick={() => {
+                            toggleMenu();
+                            setIsProfileOpen(false);
+                          }}
+                          className="block px-2 py-2 text-sm text-blue-800 hover:bg-blue-100 rounded transition"
+                        >
+                          Today's appointment
+                        </Link>
+                      )}
+
                       <Link
                         to="/mycommunity"
                         onClick={() => {

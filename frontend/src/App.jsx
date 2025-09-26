@@ -29,6 +29,7 @@ import MyCommunities from "./pages/MyCommunities/MyCommunities";
 import PatientHistory from "./pages/PatientHistory.jsx/PatientHistory";
 import DoctorTodaysAppointment from "./pages/DoctorTodaysAppointment/DoctorTodaysAppointment";
 import EditProfile from "./pages/Editprofile/EditProfile";
+import MedicalHistory from "./pages/MedicalHistory/MedicalHistory";
 
 function App() {
   return (
@@ -65,6 +66,7 @@ function App() {
           <Route path="/info/faqs" element={<FAQPage />} />
           <Route path="/info/contact" element={<ContactUs />} />
           <Route path="/profile/edit" element={<EditProfile />} />
+          <Route path="/profile/history" element={<MedicalHistory />} />
         </Routes>
         <Footer />
       </div>

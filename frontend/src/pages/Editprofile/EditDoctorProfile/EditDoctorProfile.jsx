@@ -6,6 +6,7 @@ import AvailabilityEditorModal from "./components/AvailabilityEditorModal";
 import { FaPlus } from "react-icons/fa";
 import AvailabilityRow from "./components/AvailabilityRow";
 import QualificationField from "./components/QualificationField";
+import LoadingBar from "../../../components/LoadingBar";
 
 const EditDoctorProfile = () => {
   const navigate = useNavigate();
@@ -155,6 +156,8 @@ const EditDoctorProfile = () => {
       (q) => q.trim() !== ""
     );
 
+    console.log(cleanedQualifications);
+
     const formPayload = new FormData();
 
     Object.entries(formData).forEach(([key, value]) => {
@@ -235,9 +238,7 @@ const EditDoctorProfile = () => {
   }, [formData.availability]);
 
   if (loading && operationType === "update") {
-    return (
-      <div className="p-10 text-center">Loading existing profile data...</div>
-    );
+    return (<LoadingBar/>)
   }
 
   return (

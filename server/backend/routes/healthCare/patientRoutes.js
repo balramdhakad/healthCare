@@ -8,16 +8,17 @@ import {
   updatePatientProfile,
 } from "../../controllers/healthCare/patientControllers.js";
 import auth from "../../middlewares/authMiddleware.js";
+import upload from "../../config/multer.js";
 
 const router = express.Router();
 
 //Profile Routes
-router.get("/getProfile", auth("patient"), getPatientProfile);
-router.post("/createPatientProfile", auth("patient"), createPatientProfile);
-router.put("/updatePatientProfile", auth("patient"), updatePatientProfile);
+router.get("/getProfile", auth("patient"),getPatientProfile);
+router.post("/createPatientProfile", auth("patient"), upload.single("profilePic") ,createPatientProfile);
+router.put("/updatePatientProfile", auth("patient"), upload.single("profilePic") ,updatePatientProfile);
 
 //medical History
-router.post("/medical-history", auth("patient"), createMedicalHistory);
+router.post("/medical-history", auth("patient"),upload.single("image") , createMedicalHistory);
 router.get("/medical-history", auth("patient"), getMedicalHistory);
 
 //get Appointment History

@@ -6,8 +6,9 @@ import Appointment from "../../models/healthCare/appointmentModel.js";
 //getPatientProfile if Created Already
 export const getPatientProfile = async (req, res) => {
   try {
+    const userId = req.user._id;
     const patientProfile = await Patient.findOne({
-      userId: req.user._id,
+      userId: userId,
     }).populate("userId", "mobileNo");
 
     if (!patientProfile) {
@@ -16,14 +17,11 @@ export const getPatientProfile = async (req, res) => {
         .json({ success: false, message: "Patient profile not found." });
     }
 
-    const isMedicalHistory = await MedicalHistory.find(patientProfile._id);
+    const AllMedicalHistory = await MedicalHistory.find({ patientId: userId });
 
-    //GET ALL MEDICAL HISTORY AS WELL
-    if (isMedicalHistory) {
-      patientProfile.MedicalHistory = isMedicalHistory;
-    }
-
-    res.status(200).json({ success: true, data: patientProfile });
+    res
+      .status(200)
+      .json({ success: true, data: { patientProfile, AllMedicalHistory } });
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -36,19 +34,18 @@ export const getPatientProfile = async (req, res) => {
 //update Patient Profile
 export const updatePatientProfile = async (req, res) => {
   const userId = req.user._id;
-  const { name, email, dateOfBirth, gender, bloodGroup, address } = req.body;
+  const updateFields = { ...req.body };
+
+  if (req?.file) {
+    updateFields.profilePic = req.file?.path;
+  }
+
+  console.log(updateFields)
 
   try {
     const updatedProfile = await Patient.findOneAndUpdate(
       { _id: userId },
-      {
-        name,
-        email,
-        dateOfBirth,
-        gender,
-        bloodGroup,
-        address,
-      },
+      { $set: updateFields },
       {
         new: true,
         runValidators: true,
@@ -62,8 +59,11 @@ export const updatePatientProfile = async (req, res) => {
       });
     }
 
-   if (req.body?.name) {
+    if (req.body?.name) {
       await User.findByIdAndUpdate(userId, { name: req.body.name });
+    }
+    if (req.body?.mobileNo) {
+      await User.findByIdAndUpdate(userId, { name: req.body.mobileNo });
     }
 
     res.status(200).json({
@@ -72,13 +72,12 @@ export const updatePatientProfile = async (req, res) => {
       data: updatedProfile,
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Server error.",
-        Error: error?.message,
-      });
+    console.log(error)
+    res.status(500).json({
+      success: false,
+      message: "Server error.",
+      Error: error?.message,
+    });
   }
 };
 
@@ -100,7 +99,7 @@ export const createPatientProfile = async (req, res) => {
     const newPatientProfile = new Patient({
       _id: userId,
       userId,
-      name : req.user.name,
+      name: req.user.name,
       email,
       dateOfBirth,
       gender,
@@ -130,6 +129,11 @@ export const createMedicalHistory = async (req, res) => {
   const userId = req.user._id;
   const { condition, diagnosisDate, treatment, notes, doctorName } = req.body;
 
+  let image;
+  if(req?.file){
+    image = req.file.path
+  }
+
   try {
     const patientProfile = await Patient.findById(userId);
     if (!patientProfile) {
@@ -144,11 +148,10 @@ export const createMedicalHistory = async (req, res) => {
       diagnosisDate,
       treatment,
       notes,
-      doctorName, //doctor can be from anywhere, outside or application registered
+      doctorName,
+      image
     });
 
-    //TODO: Add support to add file like photos , reports , bill , receipt , prescription etc by cloudinary
-    //add feild in database too
 
     await newRecord.save();
 

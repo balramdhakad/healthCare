@@ -29,7 +29,8 @@ import MyCommunities from "./pages/MyCommunities/MyCommunities";
 import PatientHistory from "./pages/PatientHistory.jsx/PatientHistory";
 import DoctorTodaysAppointment from "./pages/DoctorTodaysAppointment/DoctorTodaysAppointment";
 import EditProfile from "./pages/Editprofile/EditProfile";
-import MedicalHistory from "./pages/MedicalHistory/MedicalHistory";
+import AddMedicalHistory from "./pages/AddMedicalHistory/AddMedicalHistory";
+import EditMedicalHistory from "./pages/AddMedicalHistory/EditMedicalHistory";
 
 function App() {
   return (
@@ -45,7 +46,9 @@ function App() {
           <Route path="/appointments" element={<Appointments />} />
           <Route path="/mycommunity" element={<MyCommunities />} />
           <Route path="/community" element={<CommunityPage />} />
-          <Route path="/patient/history" element={<PatientHistory />} />
+          <Route path="/patient/medical-history" element={<PatientHistory />} />
+          <Route path="/patient/medical-history/add" element={<AddMedicalHistory />} />
+          <Route path="/patient/medical-history/add/:id" element={<EditMedicalHistory />} />
           <Route path="/doctor/today" element={<DoctorTodaysAppointment />} />
           <Route path="/order" element={<Ordernow />} />
           <Route path="/doctors" element={<Findadoctor />} />
@@ -66,7 +69,6 @@ function App() {
           <Route path="/info/faqs" element={<FAQPage />} />
           <Route path="/info/contact" element={<ContactUs />} />
           <Route path="/profile/edit" element={<EditProfile />} />
-          <Route path="/profile/history" element={<MedicalHistory />} />
         </Routes>
         <Footer />
       </div>

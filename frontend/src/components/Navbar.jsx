@@ -93,7 +93,7 @@ const Navbar = () => {
                     </Link>
                     {userdata?.user?.role === "patient" ? (
                       <Link
-                        to="patient/history"
+                        to="patient/medical-history"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
                       >
                         Medical Historty
@@ -236,7 +236,7 @@ const Navbar = () => {
                       </Link>
                       {userdata?.user?.role === "patient" ? (
                         <Link
-                          to="/patient/history"
+                          to="/patient/medical-history"
                           onClick={() => {
                             toggleMenu();
                             setIsProfileOpen(false);

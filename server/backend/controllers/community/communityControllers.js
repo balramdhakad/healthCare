@@ -130,3 +130,28 @@ export const joinCommunity = async (req, res) => {
   }
 };
 
+// get all communities where the user is a member
+export const getMyCommunities = async (req, res) => {
+  const userId = req.user._id;
+
+  try {
+    const communities = await Community.find({
+      members: { $in: [userId] }
+    })
+    .select('name members postCount') 
+    .sort({ name: 1 });
+
+    res.status(200).json({
+      success: true,
+      message: "Communities fetched successfully.",
+      count: communities.length,
+      data: communities,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Server error while fetching communities.",
+      Error: error.message,
+    });
+  }
+};

@@ -13,12 +13,7 @@ import axiosInstance from "../../../utilus/axiosInstance";
 import LoadingBar from "../../../components/LoadingBar";
 import NoProfileUI from "./components/NoPrNoProfileUIofile";
 import { Link, useNavigate } from "react-router-dom";
-
-const formatDate = (dateString) => {
-  if (!dateString) return "N/A";
-  const options = { year: "numeric", month: "long", day: "numeric" };
-  return new Date(dateString).toLocaleDateString("en-US", options);
-};
+import FormatDate from "../../../components/FormateDate";
 
 const PatientProfile = () => {
   const navigate = useNavigate();
@@ -124,7 +119,7 @@ const PatientProfile = () => {
           <FaBirthdayCake className="text-blue-500 w-5 h-5" />
           <div>
             <p className="text-xs text-gray-500">Date of Birth</p>
-            <p className="font-medium">{formatDate(profileData.dateOfBirth)}</p>
+            <p className="font-medium">{FormatDate(profileData.dateOfBirth)}</p>
           </div>
         </div>
         {/* Gender */}
@@ -171,7 +166,7 @@ const PatientProfile = () => {
                 {history.condition}
               </p>
               <p className="text-sm text-gray-500 mt-1">
-                Diagnosed on: {formatDate(history.diagnosisDate)}
+                Diagnosed on: {FormatDate(history.diagnosisDate)}
               </p>
               <p className="text-sm text-gray-600 mt-2 line-clamp-1">
                 Treatment: {history.treatment}
@@ -187,7 +182,7 @@ const PatientProfile = () => {
 
       {/* View More Button */}
       <div className="text-center mt-6">
-        <Link to={"/patient/history"}
+        <Link to={"/patient/medical-history"}
           className="px-8 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition duration-200 shadow-md"
         >
           View More History

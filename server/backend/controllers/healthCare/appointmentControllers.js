@@ -5,7 +5,7 @@ import Doctor from "../../models/healthCare/doctorModel.js";
 export const requestAppointment = async (req, res) => {
   try {
     const patientId = req.user._id;
-    const { doctorId, date, time, reasonForVisit } = req.body;
+    const { doctorId, date, time, reasonForVisit, appointmentType } = req.body;
 
     const doctor = await Doctor.findById(doctorId);
     if (!doctor || !doctor.verified) {
@@ -20,6 +20,7 @@ export const requestAppointment = async (req, res) => {
       date,
       time,
       reasonForVisit,
+      appointmentType: appointmentType || "physical",
     });
 
     await newAppointment.save();
@@ -44,7 +45,7 @@ export const approveAppointment = async (req, res) => {
     let token;
     if (req.body?.tokenNo) token = req.body?.tokenNo || null;
 
-    const appointment = await Appointment.findById(id);
+    const appointment = await Appointment.findById(id).populate("doctorId");
 
     if (!appointment) {
       return res
@@ -59,6 +60,7 @@ export const approveAppointment = async (req, res) => {
     }
 
     appointment.isApproved = true;
+    appointment.status = "scheduled";
 
     // default token number
     if (!token) {
@@ -71,8 +73,19 @@ export const approveAppointment = async (req, res) => {
     }
 
     //token assign by doctor
-    if (token) appointment.tokenNo = req.body.tokenNo;
-    appointment.status = "scheduled";
+    else {
+      appointment.tokenNo = req.body.tokenNo;
+    }
+
+    const consultationTime = appointment.doctorId.consultationTime || 15;
+
+    const [hours, minutes] = appointment.time.split(":").map(Number);
+    const baseTime = new Date(appointment.date);
+    baseTime.setHours(hours, minutes, 0, 0);
+
+    appointment.estimatedVisitTime = new Date(
+      baseTime.getTime() + (appointment.tokenNo - 1) * consultationTime * 60000
+    );
 
     await appointment.save();
 
@@ -138,13 +151,11 @@ export const updateAppointmentStatus = async (req, res) => {
       data: appointment,
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Server error while update status of appointment.",
-        Error: error?.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Server error while update status of appointment.",
+      Error: error?.message,
+    });
   }
 };
 
@@ -184,10 +195,8 @@ export const submitAppointmentRating = async (req, res) => {
       });
     }
 
- 
-
     appointment.rating = {
-      rating : rating,
+      rating: rating,
       comment,
     };
     await appointment.save();
@@ -201,6 +210,93 @@ export const submitAppointmentRating = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Server error while rate appointment.",
+      error: error.message,
+    });
+  }
+};
+
+export const getAppointmentDetails = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        message: "Appointment ID is required in the request parameters.",
+      });
+    }
+
+    const appointmentDetails = await Appointment.findById(id).populate(
+      "doctorId",
+      "name profilePic specialization fees"
+    );
+
+    if (!appointmentDetails) {
+      return res.status(404).json({
+        success: false,
+        message: "Appointment details not found.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: appointmentDetails,
+    });
+  } catch (error) {
+    return res.status(statusCode).json({
+      success: false,
+      message: "error while fetch appointment by id",
+      Error: error?.message,
+    });
+  }
+};
+
+export const trackAppointment = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const appointment = await Appointment.findById(id);
+    if (!appointment) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Appointment not found." });
+    }
+
+    const doctorId = appointment.doctorId;
+    const date = appointment.date;
+
+    const completedAppointments = await Appointment.find({
+      doctorId,
+      date,
+      status: { $in: ["completed"] },
+    }).sort({ tokenNo: 1 });
+
+    const currentToken = completedAppointments.length
+      ? completedAppointments[completedAppointments.length - 1].tokenNo + 1
+      : 1;
+
+    const waitingPosition = appointment.tokenNo - currentToken;
+
+    const doctor = await Doctor.findById(doctorId);
+    const consultationTime = doctor?.consultationTime || 15;
+
+    const waitingTimeMinutes =
+      waitingPosition > 0 ? waitingPosition * consultationTime : 0;
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        myToken: appointment.tokenNo,
+        currentToken,
+        waitingPosition: Math.max(waitingPosition, 0),
+        waitingTimeMinutes,
+        estimatedVisitTime: appointment.estimatedVisitTime,
+        status: appointment.status,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Error tracking appointment",
       error: error.message,
     });
   }

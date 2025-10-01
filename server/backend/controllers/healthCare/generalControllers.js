@@ -4,10 +4,11 @@ import Doctor from "../../models/healthCare/doctorModel.js";
 import mongoose from "mongoose";
 
 //getDoctorById
-export const getDoctorById = async (req, res) => {
-  try {
-    const { id } = req.params;
 
+export const getDoctorById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res
         .status(400)
@@ -29,106 +30,163 @@ export const getDoctorById = async (req, res) => {
         },
       },
       {
+        $unwind: {
+          path: "$appointments",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $match: {
+          $or: [
+            { "appointments.rating": { $eq: null } },
+            { "appointments.rating.rating": { $gte: 1, $lte: 5 } },
+          ],
+        },
+      },
+      {
+        $lookup: {
+          from: "patients",
+          localField: "appointments.patientId",
+          foreignField: "userId",
+          as: "patientDetails",
+        },
+      },
+      {
+        $unwind: {
+          path: "$patientDetails",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $group: {
+          _id: "$_id",
+          name: { $first: "$name" },
+          mobileNo: { $first: "$mobileNo" },
+          specialization: { $first: "$specialization" },
+          experience: { $first: "$experience" },
+          bio: { $first: "$bio" },
+          qualifications: { $first: "$qualifications" },
+          fees: { $first: "$fees" },
+          email: { $first: "$email" },
+          clinicAddress: { $first: "$clinicAddress" },
+          profilePic: { $first: "$profilePic" },
+          appointmentTypes: { $first: "$appointmentTypes" },
+          availability: { $first: "$availability" },
+
+          reviews: {
+            $push: {
+              $cond: [
+                {
+                  $and: [
+                    { $ne: ["$appointments.rating", null] },
+                    { $gte: ["$appointments.rating.rating", 1] },
+                    { $lte: ["$appointments.rating.rating", 5] },
+                  ],
+                },
+                {
+                  rating: "$appointments.rating.rating",
+                  comment: "$appointments.rating.comment",
+                  ratedAt: "$appointments.rating.ratedAt",
+                  patientName: "$patientDetails.name",
+                  patientProfilePic: "$patientDetails.profilePic",
+                },
+                "$$REMOVE",
+              ],
+            },
+          },
+        },
+      },
+      {
         $project: {
-          _id: 0,
           id: "$_id",
+          _id: 0,
           name: 1,
           specialization: 1,
+          mobileNo: 1,
           experience: 1,
           bio: 1,
           qualifications: 1,
           fees: 1,
-          verified: 1,
           email: 1,
           clinicAddress: 1,
           profilePic: 1,
           appointmentTypes: 1,
-          communities: 1,
           availability: 1,
+
           averageRating: {
-            $avg: {
-              $filter: {
-                input: "$appointments.rating",
-                as: "rating",
-                cond: { $ne: ["$$rating", null] },
-              },
-            },
+            $avg: "$reviews.rating",
           },
           reviewsCount: {
-            $size: {
-              $filter: {
-                input: "$appointments.rating",
-                as: "rating",
-                cond: { $ne: ["$$rating", null] },
-              },
-            },
+            $size: "$reviews",
           },
           ratingsBreakdown: {
             5: {
               $size: {
                 $filter: {
-                  input: "$appointments.rating",
-                  as: "rating",
-                  cond: { $eq: ["$$rating.rating", 5] },
+                  input: "$reviews",
+                  as: "r",
+                  cond: { $eq: ["$$r.rating", 5] },
                 },
               },
             },
             4: {
               $size: {
                 $filter: {
-                  input: "$appointments.rating",
-                  as: "rating",
-                  cond: { $eq: ["$$rating.rating", 4] },
+                  input: "$reviews",
+                  as: "r",
+                  cond: { $eq: ["$$r.rating", 4] },
                 },
               },
             },
             3: {
               $size: {
                 $filter: {
-                  input: "$appointments.rating",
-                  as: "rating",
-                  cond: { $eq: ["$$rating.rating", 3] },
+                  input: "$reviews",
+                  as: "r",
+                  cond: { $eq: ["$$r.rating", 3] },
                 },
               },
             },
             2: {
               $size: {
                 $filter: {
-                  input: "$appointments.rating",
-                  as: "rating",
-                  cond: { $eq: ["$$rating.rating", 2] },
+                  input: "$reviews",
+                  as: "r",
+                  cond: { $eq: ["$$r.rating", 2] },
                 },
               },
             },
             1: {
               $size: {
                 $filter: {
-                  input: "$appointments.rating",
-                  as: "rating",
-                  cond: { $eq: ["$$rating.rating", 1] },
+                  input: "$reviews",
+                  as: "r",
+                  cond: { $eq: ["$$r.rating", 1] },
                 },
               },
             },
           },
+
           recentReviews: {
             $slice: [
               {
-                $map: {
+                $sortArray: {
                   input: {
                     $filter: {
-                      input: "$appointments",
-                      as: "appt",
-                      cond: { $ne: ["$$appt.rating", null] },
+                      input: "$reviews",
+                      as: "r",
+                      cond: {
+                        $and: [
+                          { $ne: ["$$r.comment", null] },
+                          { $ne: ["$$r.comment", ""] },
+                        ],
+                      },
                     },
                   },
-                  as: "appt",
-                  in: {
-                    text: "$$appt.rating.comment",
-                    rating: "$$appt.rating.rating",
-                  },
+                  sortBy: { ratedAt: -1 },
                 },
               },
-              10,
+              5,
             ],
           },
         },
@@ -141,12 +199,17 @@ export const getDoctorById = async (req, res) => {
         .json({ success: false, message: "Doctor not found." });
     }
 
-    res.status(200).json({ success: true, data: doctorDetails[0] });
+    const finalData = doctorDetails[0];
+    if (finalData.averageRating) {
+      finalData.averageRating = parseFloat(finalData.averageRating.toFixed(1));
+    }
+
+    res.status(200).json({ success: true, data: finalData });
   } catch (error) {
     res.status(500).json({
       success: false,
       message: "Server error while finding Doctor.",
-      error: error.message,
+      Error: error.message,
     });
   }
 };
@@ -154,7 +217,8 @@ export const getDoctorById = async (req, res) => {
 //perform searching
 export const searchDoctors = async (req, res) => {
   try {
-    const { specialization, qualifications, search,appointmentTypes } = req.query;
+    const { specialization, qualifications, search, appointmentTypes } =
+      req.query;
 
     const query = { verified: true };
 
@@ -166,10 +230,10 @@ export const searchDoctors = async (req, res) => {
       query.qualifications = { $in: [new RegExp(qualifications, "i")] };
     }
 
-        if (appointmentTypes) {
+    if (appointmentTypes) {
       const typesArray = Array.isArray(appointmentTypes)
         ? appointmentTypes
-        : appointmentTypes.split(',');
+        : appointmentTypes.split(",");
 
       query.appointmentTypes = { $in: typesArray };
     }

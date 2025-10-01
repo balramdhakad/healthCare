@@ -23,9 +23,9 @@ const availabilitySchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    slotDuration: {
-      type: Number,
-      required: true,
+    slotDuration:{
+      type : Number,
+      default:15
     },
   },
   {
@@ -76,6 +76,10 @@ const doctorSchema = new mongoose.Schema(
     fees: {
       type: Number,
       required: true,
+    },
+    consultationTime: {
+      type: Number,
+      default: 15,
     },
 
     verified: {

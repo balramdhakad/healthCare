@@ -200,3 +200,43 @@ export const getDoctorAppointmentHistory = async (req, res) => {
     });
   }
 };
+
+
+// Get Doctor Availability
+export const getDoctorAvailability = async (req, res) => {
+  try {
+    const { id } = req.params; 
+    const { date } = req.query;
+
+    const doctor = await Doctor.findById(id);
+    if (!doctor) {
+      return res.status(404).json({ success: false, message: "Doctor not found" });
+    }
+
+    const day = new Date(date).toLocaleDateString("en-IN", { weekday: "long" });
+    const availability = doctor.availability.find(a => a.day === day);
+
+    if (!availability) {
+      return res.status(200).json({ success: true, slots: [] });
+    }
+
+    const slots = [];
+    let [h, m] = availability.startTime.split(":").map(Number);
+    const [endH, endM] = availability.endTime.split(":").map(Number);
+
+    while (h < endH || (h === endH && m < endM)) {
+      const time = `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`;
+      slots.push(time);
+
+      m += availability.slotDuration;
+      if (m >= 60) {
+        h += Math.floor(m / 60);
+        m = m % 60;
+      }
+    }
+
+    res.json({ success: true, slots });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Server error", error: err.message });
+  }
+};

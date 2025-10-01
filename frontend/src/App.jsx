@@ -31,6 +31,8 @@ import DoctorTodaysAppointment from "./pages/DoctorTodaysAppointment/DoctorToday
 import EditProfile from "./pages/Editprofile/EditProfile";
 import AddMedicalHistory from "./pages/AddMedicalHistory/AddMedicalHistory";
 import EditMedicalHistory from "./pages/AddMedicalHistory/EditMedicalHistory";
+import AppointmentDetails from "./pages/AppointmentDetails/AppointmentDetails";
+import BookAppointment from "./pages/BookAppointment/BookAppointment";
 
 function App() {
   return (
@@ -44,6 +46,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/appointments" element={<Appointments />} />
+          <Route path="/patient/appointments/:id" element={<AppointmentDetails />} />
           <Route path="/mycommunity" element={<MyCommunities />} />
           <Route path="/community" element={<CommunityPage />} />
           <Route path="/patient/medical-history" element={<PatientHistory />} />
@@ -69,6 +72,7 @@ function App() {
           <Route path="/info/faqs" element={<FAQPage />} />
           <Route path="/info/contact" element={<ContactUs />} />
           <Route path="/profile/edit" element={<EditProfile />} />
+          <Route path="/booking/:id" element={<BookAppointment />} />
         </Routes>
         <Footer />
       </div>

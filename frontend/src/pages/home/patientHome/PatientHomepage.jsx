@@ -9,7 +9,6 @@ import CommunityCard from "./components/CommunityCard";
 import DoctorProfileCard from "./components/DoctorProfileCard";
 import TopLevelActions from "./components/TopLevelActions";
 
-
 import React, { useRef } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import axiosInstance from "../../../utilus/axiosInstance";
@@ -58,7 +57,7 @@ const HorizontalCarousel = ({ title, children }) => {
       </div>
       <div
         ref={carouselRef}
-        className="flex space-x-4 overflow-x-auto custom-scrollbar hide-scrollbar pb-2"
+        className="flex space-x-4 overflow-x-auto custom-scrollbar pb-2"
       >
         {children}
       </div>

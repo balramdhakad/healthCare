@@ -46,6 +46,10 @@ const appointmentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    
+    estimatedVisitTime: {
+      type: Date,
+    },
 
     status: {
       type: String,
@@ -65,6 +69,16 @@ const appointmentSchema = new mongoose.Schema(
 
     tokenNo: {
       type: Number,
+    },
+
+    note: {
+      type: String,
+    },
+
+    appointmentType: {
+      type: String,
+      enum: ["physical", "video"],
+      default: "physical",
     },
 
     rating: {

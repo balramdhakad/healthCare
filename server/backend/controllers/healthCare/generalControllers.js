@@ -2,6 +2,8 @@ import Community from "../../models/community/communityModel.js";
 import Appointment from "../../models/healthCare/appointmentModel.js";
 import Doctor from "../../models/healthCare/doctorModel.js";
 import mongoose from "mongoose";
+import MedicalHistory from "../../models/healthCare/medicalHistoryModel.js";
+import Patient from "../../models/healthCare/patientModel.js";
 
 //getDoctorById
 
@@ -360,6 +362,34 @@ export const getTopRatedData = async (req, res) => {
       success: false,
       message: "Server error while fetching top data.",
       error: error.message,
+    });
+  }
+};
+
+//get Patient profile
+export const getPatientProfileById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const patientProfile = await Patient.findById(id).populate(
+      "userId",
+      "mobileNo"
+    );
+
+    if (!patientProfile) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Patient profile not found." });
+    }
+
+    const AllMedicalHistory = await MedicalHistory.find({ patientId: id });
+    res
+      .status(200)
+      .json({ success: true, data: { patientProfile, AllMedicalHistory } });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Server error while fetch patient Profile.",
+      Error: error?.message,
     });
   }
 };

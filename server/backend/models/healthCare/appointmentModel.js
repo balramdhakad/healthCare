@@ -63,6 +63,10 @@ const appointmentSchema = new mongoose.Schema(
       default: false,
     },
 
+    cancelReason : {
+      type :String
+    },
+
     reasonForVisit: {
       type: String,
     },

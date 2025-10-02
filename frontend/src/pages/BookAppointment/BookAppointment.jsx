@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import axiosInstance from "../../utilus/axiosInstance";
 import { useSelector } from "react-redux";
 
 const BookAppointment = () => {
   const { id: doctorId } = useParams();
+  const navigate = useNavigate()
 
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
@@ -64,6 +65,7 @@ const BookAppointment = () => {
       if (res.data.success) {
         setConfirmation(res.data.data);
         toast.success("Appointment booked successfully!");
+        navigate("/appointments")
       } else {
         toast.error(res.data.message || "Booking failed");
       }
@@ -91,7 +93,7 @@ const BookAppointment = () => {
       />
 
       {/* Time Picker */}
-      <label className="block mb-2 font-medium">Select Time</label>
+      <label className="block mb-2 font-medium">Select Preferred Time</label>
       <select
         value={time}
         onChange={(e) => setTime(e.target.value)}

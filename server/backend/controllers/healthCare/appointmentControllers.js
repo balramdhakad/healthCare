@@ -45,7 +45,8 @@ export const approveAppointment = async (req, res) => {
     let token;
     if (req.body?.tokenNo) token = req.body?.tokenNo || null;
 
-    const appointment = await Appointment.findById(id).populate("doctorId");
+    const appointment = await Appointment.findById(id)
+    // .populate("doctorId");
 
     if (!appointment) {
       return res
@@ -105,10 +106,11 @@ export const approveAppointment = async (req, res) => {
 
 //to cancel or complete appoinment
 export const updateAppointmentStatus = async (req, res) => {
+  
   try {
     const { id } = req.params;
     const { status } = req.body;
-    const doctorId = req.user._id;
+    const userId = req.user._id;
 
     // Validate the provided status
     const validStatuses = ["completed", "canceled"];
@@ -127,20 +129,25 @@ export const updateAppointmentStatus = async (req, res) => {
         .json({ success: false, message: "Appointment not found." });
     }
 
-    if (appointment.doctorId.toString() !== doctorId.toString()) {
+    if (
+      appointment.doctorId.toString() !== userId.toString() &&
+      appointment.patientId.toString() !== userId.toString()
+    ) {
       return res
         .status(403)
-        .json({ success: false, message: "Unauthorized access." });
+        .json({ success: false, message: "Unauthorized access here" });
     }
 
     //only completed if approved previously
     if (status === "completed" && appointment.isApproved) {
       appointment.status = "completed";
+      appointment.note = req?.body?.note
     }
 
     //To cancel appoinment
     if (status === "canceled") {
       appointment.status = "canceled";
+      appointment.cancelReason = `${req?.body?.cancelReason} - cancel By ${req.user.role}`;
     }
 
     await appointment.save();
@@ -151,6 +158,7 @@ export const updateAppointmentStatus = async (req, res) => {
       data: appointment,
     });
   } catch (error) {
+    console.log(error)
     res.status(500).json({
       success: false,
       message: "Server error while update status of appointment.",
@@ -226,10 +234,15 @@ export const getAppointmentDetails = async (req, res) => {
       });
     }
 
-    const appointmentDetails = await Appointment.findById(id).populate(
+    const appointmentDetails = await Appointment.findById(id)
+    .populate(
       "doctorId",
       "name profilePic specialization fees"
-    );
+    )
+    .populate(
+      "patientId",
+      "name profilePic"
+    )
 
     if (!appointmentDetails) {
       return res.status(404).json({

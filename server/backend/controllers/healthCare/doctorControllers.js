@@ -17,7 +17,7 @@ export const createDoctorProfile = async (req, res) => {
     clinicAddress,
     fees,
     availability,
-    appointmentTypes
+    appointmentTypes,
   } = req.body;
 
   if (availability && typeof availability === "string") {
@@ -43,11 +43,11 @@ export const createDoctorProfile = async (req, res) => {
       profilePic = req.file?.path;
     }
 
-        if (name) {
+    if (name) {
       await User.findByIdAndUpdate(userId, { name: req.body.name });
     }
 
-        if (mobileNo) {
+    if (mobileNo) {
       await User.findByIdAndUpdate(userId, { mobileNo: req.body.mobileNo });
     }
 
@@ -85,21 +85,27 @@ export const updateDoctorProfile = async (req, res) => {
     const updateFields = { ...req.body };
 
     if (req?.file) {
-          updateFields.profilePic = req.file?.path;
+      updateFields.profilePic = req.file?.path;
     }
 
-    if (updateFields.availability && typeof updateFields.availability === "string") {
+    if (
+      updateFields.availability &&
+      typeof updateFields.availability === "string"
+    ) {
       updateFields.availability = JSON.parse(updateFields.availability);
     }
-    if (updateFields.qualifications && typeof updateFields.qualifications === "string") {
+    if (
+      updateFields.qualifications &&
+      typeof updateFields.qualifications === "string"
+    ) {
       updateFields.qualifications = JSON.parse(updateFields.qualifications);
     }
-    if (updateFields.appointmentTypes && typeof updateFields.appointmentTypes === "string") {
+    if (
+      updateFields.appointmentTypes &&
+      typeof updateFields.appointmentTypes === "string"
+    ) {
       updateFields.appointmentTypes = JSON.parse(updateFields.appointmentTypes);
     }
-
-
-
 
     const updatedProfile = await Doctor.findOneAndUpdate(
       { userId },
@@ -164,9 +170,11 @@ export const getTodayAppointments = async (req, res) => {
         $gte: today,
         $lt: tomorrow,
       },
-    }).sort({ time: 1 });
+    })
+      .populate("patientId", "name mobileNo")
+      .sort({ time: -1 });
 
-    res.status(200).json({ success: true, data: appointments });
+    res.status(200).json({ success: true, data: appointments || [] });
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -201,20 +209,21 @@ export const getDoctorAppointmentHistory = async (req, res) => {
   }
 };
 
-
 // Get Doctor Availability
 export const getDoctorAvailability = async (req, res) => {
   try {
-    const { id } = req.params; 
+    const { id } = req.params;
     const { date } = req.query;
 
     const doctor = await Doctor.findById(id);
     if (!doctor) {
-      return res.status(404).json({ success: false, message: "Doctor not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Doctor not found" });
     }
 
     const day = new Date(date).toLocaleDateString("en-IN", { weekday: "long" });
-    const availability = doctor.availability.find(a => a.day === day);
+    const availability = doctor.availability.find((a) => a.day === day);
 
     if (!availability) {
       return res.status(200).json({ success: true, slots: [] });
@@ -225,7 +234,10 @@ export const getDoctorAvailability = async (req, res) => {
     const [endH, endM] = availability.endTime.split(":").map(Number);
 
     while (h < endH || (h === endH && m < endM)) {
-      const time = `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`;
+      const time = `${String(h).padStart(2, "0")}:${String(m).padStart(
+        2,
+        "0"
+      )}`;
       slots.push(time);
 
       m += availability.slotDuration;
@@ -237,6 +249,8 @@ export const getDoctorAvailability = async (req, res) => {
 
     res.json({ success: true, slots });
   } catch (err) {
-    res.status(500).json({ success: false, message: "Server error", error: err.message });
+    res
+      .status(500)
+      .json({ success: false, message: "Server error", error: err.message });
   }
 };

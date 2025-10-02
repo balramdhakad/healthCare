@@ -12,7 +12,7 @@ import {
 const router = express.Router();
 
 router.post("/book", auth("patient"), requestAppointment);
-router.put("/:id", auth("doctor"), updateAppointmentStatus);
+router.put("/:id", auth("patient","doctor"), updateAppointmentStatus);
 router.get("/:id", auth("patient","doctor"), getAppointmentDetails);
 router.get("/:id/track", auth("patient","doctor"), trackAppointment);
 router.put("/:id/approve", auth("doctor"), approveAppointment);

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axiosInstance from '../../../../utilus/axiosInstance';
 import { useSelector } from 'react-redux';
+import toast from 'react-hot-toast';
 
 const StarIcon = ({ color, size, onClick, onMouseEnter, onMouseLeave }) => (
     <svg
@@ -40,7 +41,7 @@ const RatingModal = ({ appointment, onClose, onRatingSubmitted }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (rating === 0) {
-            window.alert('Please select a star rating (1 to 5).');
+            toast.error('Please select a star rating (1 to 5).');
             return;
         }
 
@@ -60,14 +61,13 @@ const RatingModal = ({ appointment, onClose, onRatingSubmitted }) => {
             );
 
             if (res.data.success) {
-                window.alert(res.data.message);
+                toast.success(res.data.message);
                 onRatingSubmitted(appointmentId, res.data.data.rating); 
                 onClose();
             }
         } catch (error) {
             const errorMessage = error.response?.data?.message || 'Failed to submit rating.';
-            window.alert(errorMessage);
-            console.error('Rating submission error:', error.response || error);
+            toast.error(errorMessage);
         } finally {
             setSubmitting(false);
         }
@@ -80,7 +80,7 @@ const RatingModal = ({ appointment, onClose, onRatingSubmitted }) => {
                 <p className="text-gray-600 mb-6">How was your appointment with <span className="font-semibold text-blue-600">Dr. {doctorName}</span>?</p>
                 
                 <form onSubmit={handleSubmit}>
-                    {/* Star Rating Section */}
+
                     <div className="flex justify-center mb-6">
                         {[...Array(5)].map((star, index) => {
                             const ratingValue = index + 1;

@@ -33,6 +33,7 @@ import AddMedicalHistory from "./pages/AddMedicalHistory/AddMedicalHistory";
 import EditMedicalHistory from "./pages/AddMedicalHistory/EditMedicalHistory";
 import AppointmentDetails from "./pages/AppointmentDetails/AppointmentDetails";
 import BookAppointment from "./pages/BookAppointment/BookAppointment";
+import PatientProfileView from "./pages/PatientProfileView/PatientProfileView";
 
 function App() {
   return (
@@ -61,6 +62,7 @@ function App() {
             element={<DoctorCategoryPage />}
           />
           <Route path="/doctor/:id" element={<DoctorProfilePage />} />
+          <Route path="/patient/:id" element={<PatientProfileView />} />
           <Route
             path="/community/createcommunity"
             element={<CreateCommunity />}

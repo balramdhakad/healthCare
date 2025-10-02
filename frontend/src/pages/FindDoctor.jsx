@@ -1,12 +1,16 @@
-
-import React, { useState, useEffect, useCallback } from 'react';
-import { FaSearch, FaFilter, FaSort, FaUserClock, FaRupeeSign } from 'react-icons/fa';
-import { Link, useLocation } from 'react-router-dom';
-import defaultImage from '../assets/doctor.jpeg';
-import axiosInstance from '../utilus/axiosInstance';
-import DoctorCard from './DoctorCategory/components/DoctorCard';
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  FaSearch,
+  FaFilter,
+  FaSort,
+  FaUserClock,
+  FaRupeeSign,
+} from "react-icons/fa";
+import { Link, useLocation } from "react-router-dom";
+import defaultImage from "../assets/doctor.jpeg";
+import axiosInstance from "../utilus/axiosInstance";
+import DoctorCard from "./DoctorCategory/components/DoctorCard";
 import { FaUserDoctor } from "react-icons/fa6";
-import DoctorCategoryGrid from './home/patientHome/components/DoctorCategoryGrid';
 
 const DoctorCategoryCard = ({ title, onClick }) => (
   <div
@@ -23,12 +27,12 @@ const DoctorCategoryCard = ({ title, onClick }) => (
 const FindDoctor = () => {
   const location = useLocation();
 
-  const [searchTerm, setSearchTerm] = useState('');
-  const [specializationFilter, setSpecializationFilter] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [specializationFilter, setSpecializationFilter] = useState("");
   const [appointmentTypeFilter, setAppointmentTypeFilter] = useState(
-    location?.state?.appointmentType || ''
+    location?.state?.appointmentType || ""
   );
-  const [sortBy, setSortBy] = useState('');
+  const [sortBy, setSortBy] = useState("");
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -52,18 +56,17 @@ const FindDoctor = () => {
       if (searchTerm) params.search = searchTerm;
       if (specializationFilter) params.specialization = specializationFilter;
 
-
       if (appointmentTypeFilter) {
         params.appointmentTypes = appointmentTypeFilter;
       }
 
-      const res = await axiosInstance.get('/general/doctors', { params });
+      const res = await axiosInstance.get("/general/doctors", { params });
 
       let sortedDoctors = [...res.data.data];
 
-      if (sortBy === 'experience-desc') {
+      if (sortBy === "experience-desc") {
         sortedDoctors.sort((a, b) => b.experience - a.experience);
-      } else if (sortBy === 'fees-asc') {
+      } else if (sortBy === "fees-asc") {
         sortedDoctors.sort((a, b) => a.fees - b.fees);
       }
 
@@ -86,7 +89,6 @@ const FindDoctor = () => {
 
   return (
     <div className="container mx-auto px-4 md:px-8">
-
       {/* Search Bar */}
       <div className="flex justify-center mt-6">
         <div className="relative w-full max-w-4xl">
@@ -111,14 +113,14 @@ const FindDoctor = () => {
             className="pl-10 pr-4 py-2 border border-gray-300 rounded-full bg-white text-gray-700"
           >
             <option value="">All Specializations</option>
-            
-            {specializations
-            .map(spec => (
-              <option key={spec} value={spec}>{spec}</option>
+
+            {specializations.map((spec) => (
+              <option key={spec} value={spec}>
+                {spec}
+              </option>
             ))}
           </select>
         </div>
-
 
         <div className="relative">
           <FaFilter className="absolute top-1/2 left-3 -translate-y-1/2 text-gray-500" />
@@ -148,9 +150,11 @@ const FindDoctor = () => {
       </div>
 
       {/* Browse by Category  */}
-      {searchTerm.trim() === '' && (
+      {searchTerm.trim() === "" && (
         <div className="mt-10">
-          <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4">Browse by Category</h2>
+          <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4">
+            Browse by Category
+          </h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
             {specializations.map((title, index) => (
               <DoctorCategoryCard
@@ -166,7 +170,9 @@ const FindDoctor = () => {
       {/* Doctors List */}
       <div className="mt-12">
         <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-6">
-          {searchTerm || specializationFilter || appointmentTypeFilter ? 'Search Results' : 'All Doctors'}
+          {searchTerm || specializationFilter || appointmentTypeFilter
+            ? "Search Results"
+            : "All Doctors"}
         </h2>
 
         {loading ? (
@@ -179,7 +185,7 @@ const FindDoctor = () => {
           </div>
         ) : doctors.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {doctors.map(doctor => (
+            {doctors.map((doctor) => (
               <DoctorCard key={doctor._id} doctor={doctor} />
             ))}
           </div>

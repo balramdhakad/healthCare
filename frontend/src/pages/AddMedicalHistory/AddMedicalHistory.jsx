@@ -6,6 +6,7 @@ import { RiHealthBookFill } from 'react-icons/ri';
 import axiosInstance from '../../utilus/axiosInstance';
 import FormInput from './components/FormInput';
 import ImageUploader from './components/ImageUploader';
+import toast from 'react-hot-toast';
 
 const AddMedicalHistory = () => {
     const navigate = useNavigate();
@@ -47,7 +48,7 @@ const AddMedicalHistory = () => {
         e.preventDefault();
         setSubmitting(true);
         if (!formData.condition || !formData.diagnosisDate || !formData.treatment || !formData.doctorName) {
-            window.alert('Please fill in the Condition, Diagnosis Date, Treatment, and Doctor\'s Name.');
+            toast.error('Please fill in the Condition, Diagnosis Date, Treatment, and Doctor\'s Name.');
             setSubmitting(false);
             return;
         }
@@ -68,13 +69,12 @@ const AddMedicalHistory = () => {
                 },
             });
 
-            window.alert(res.data.message);
+            toast.success(res.data.message);
             navigate("/patient/medical-history");
 
         } catch (error) {
             const errorMessage = error.response?.data?.message || "Failed to add medical history.";
-            window.alert(errorMessage);
-            console.error("Submission error:", error.response || error);
+            toast.error(errorMessage);
         } finally {
             setSubmitting(false);
         }

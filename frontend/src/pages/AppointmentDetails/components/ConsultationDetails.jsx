@@ -1,4 +1,4 @@
-const ConsultationDetails = ({ reasonForVisit, notes, isCompleted }) => {
+const ConsultationDetails = ({ reasonForVisit, note, isCompleted }) => {
   return (
     <div className="space-y-4">
       <div className="p-4 rounded-lg border border-gray-200">
@@ -8,12 +8,12 @@ const ConsultationDetails = ({ reasonForVisit, notes, isCompleted }) => {
         <p className="text-gray-600 italic">{reasonForVisit || "N/A"}</p>
       </div>
 
-      {isCompleted && notes && (
+      {isCompleted && note && (
         <div className="p-4 rounded-lg border border-gray-200">
           <h3 className="text-lg font-semibold text-gray-800 mb-2">
-            Doctor's Notes
+            Doctor's note
           </h3>
-          <p className="text-gray-600">{notes}</p>
+          <p className="text-gray-600">{note}</p>
         </div>
       )}
     </div>

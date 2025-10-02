@@ -7,6 +7,7 @@ import axiosInstance from "../../utilus/axiosInstance";
 import LoadingBar from "../../components/LoadingBar";
 import FormInput from "./components/FormInput";
 import ImageUploader from "./components/ImageUploader";
+import toast from "react-hot-toast";
 
 
 const EditMedicalHistory = () => {
@@ -50,7 +51,7 @@ const EditMedicalHistory = () => {
       });
       setExistingImageUrl(record.image || "");
     } catch (error) {
-      window.alert("Failed to load medical record .");
+      toast.error("Failed to load medical record .");
       navigate("/patient/medical-history");
     } finally {
       setLoading(false);
@@ -93,7 +94,7 @@ const EditMedicalHistory = () => {
       !formData.treatment ||
       !formData.doctorName
     ) {
-      window.alert(
+      toast.error(
         "Please fill in the Condition, Diagnosis Date, Treatment, and Doctor's Name."
       );
       setSubmitting(false);
@@ -118,12 +119,11 @@ const EditMedicalHistory = () => {
         },
       });
 
-      window.alert(res.data.message);
+      toast.success(res.data.message);
       navigate("/patient/medical-history");
     } catch (error) {
       const errorMessage = error.response?.data?.message || "Failed to update medical history.";
-      window.alert(errorMessage);
-      console.error("Submission error:", error.response || error);
+      toast.error(errorMessage);
     } finally {
       setSubmitting(false);
     }

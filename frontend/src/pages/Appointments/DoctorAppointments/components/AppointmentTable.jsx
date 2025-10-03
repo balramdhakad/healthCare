@@ -128,3 +128,4 @@ const AppointmentTable = ({ appointments, isLoading, onActionRequest }) => {
 };
 
 export default AppointmentTable;
+

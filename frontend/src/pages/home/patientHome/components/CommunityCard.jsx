@@ -9,7 +9,7 @@ const CommunityCard = ({community}) => (
     <img
       src={image}
       alt={community.name}
-      className="w-full h-24 object-cover rounded-md"
+      className="w-full h-24 object-contain rounded-md"
     />
     <div className="mt-4 text-center">
       <h4 className="font-semibold text-gray-900">{community.name}</h4>

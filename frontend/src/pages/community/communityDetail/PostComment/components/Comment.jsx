@@ -1,7 +1,7 @@
 
 
 import defaultProfile from "../../../../../assets/profile.png"
-import { formatDate } from "./FormateDate";
+import FormatDate from "../../../../../components/FormateDate";
 
 const Comment = ({ comment }) => (
   <div className="flex items-start mb-6">
@@ -14,7 +14,7 @@ const Comment = ({ comment }) => (
       <div className="flex items-center justify-between mb-1">
         <div className="font-semibold text-gray-900">{comment?.userId?.name}</div>
         <div className="text-sm text-gray-500">
-          {formatDate(comment?.createdAt)}
+          {FormatDate(comment?.createdAt)}
         </div>
       </div>
       <p className="text-gray-700">{comment.text}</p>

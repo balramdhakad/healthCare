@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import axiosInstance from "../../../utilus/axiosInstance"; 
 import { CgFilters, CgSearch } from "react-icons/cg";
 import AppointmentTable from "./components/AppointmentTable";
@@ -159,7 +158,7 @@ const DoctorAppointments = () => {
                     </div>
                 </div>
 
-                {/* --- TABLE CONTAINER --- */}
+
                 <AppointmentTable
                     appointments={filteredAndSortedAppointments}
                     isLoading={isLoading}
@@ -167,7 +166,6 @@ const DoctorAppointments = () => {
                 />
             </div>
 
-            {/* --- MODAL RENDER --- */}
             {actionRequest && (
                 <AppointmentActionModal
                     action={actionRequest.action}

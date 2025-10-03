@@ -14,8 +14,7 @@ const FeedbackCard = ({ feedback }) => {
   }
 
   return (
-    <Link
-      to={feedback?._id}
+    <div
       className="flex-shrink-0 w-80 p-6 bg-white rounded-xl shadow-md"
     >
       <div className="flex justify-between items-center">
@@ -27,7 +26,7 @@ const FeedbackCard = ({ feedback }) => {
         </div>
       </div>
       <p className="text-sm text-gray-600 italic mt-2">"{feedback?.rating.comment}"</p>
-    </Link>
+    </div>
   );
 };
 

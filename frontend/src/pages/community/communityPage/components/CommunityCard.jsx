@@ -4,6 +4,7 @@ import { useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import { MdOutlinePostAdd } from "react-icons/md";
 import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const CommunityCard = ({ community }) => {
   const { userdata } = useSelector((state) => state.auth);
@@ -24,11 +25,11 @@ const CommunityCard = ({ community }) => {
       );
 
       if (response.data.success) {
-        window.alert("Community joined");
+        toast.success("Community joined");
         setIsMember(true);
       }
     } catch (error) {
-      console.log(error);
+      toast.error(error?.response?.message || "something went wrong");
     } finally {
       setLoading(false);
     }

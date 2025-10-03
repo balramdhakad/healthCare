@@ -23,11 +23,9 @@ import FAQPage from "./pages/info/FAQPage";
 import ContactUs from "./pages/info/ContactUs";
 import Footer from "./components/Footer";
 import Profile from "./pages/Profile/Profile";
-import Dashboard from "./pages/Dashboard/Dashboard";
 import Appointments from "./pages/Appointments/Appointments";
 import MyCommunities from "./pages/MyCommunities/MyCommunities";
 import PatientHistory from "./pages/PatientHistory.jsx/PatientHistory";
-import DoctorTodaysAppointment from "./pages/DoctorTodaysAppointment/DoctorTodaysAppointment";
 import EditProfile from "./pages/Editprofile/EditProfile";
 import AddMedicalHistory from "./pages/AddMedicalHistory/AddMedicalHistory";
 import EditMedicalHistory from "./pages/AddMedicalHistory/EditMedicalHistory";
@@ -45,7 +43,6 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/appointments" element={<Appointments />} />
           <Route path="/patient/appointments/:id" element={<AppointmentDetails />} />
           <Route path="/mycommunity" element={<MyCommunities />} />
@@ -53,7 +50,6 @@ function App() {
           <Route path="/patient/medical-history" element={<PatientHistory />} />
           <Route path="/patient/medical-history/add" element={<AddMedicalHistory />} />
           <Route path="/patient/medical-history/add/:id" element={<EditMedicalHistory />} />
-          <Route path="/doctor/today" element={<DoctorTodaysAppointment />} />
           <Route path="/order" element={<Ordernow />} />
           <Route path="/doctors" element={<Findadoctor />} />
           <Route path="/about" element={<About />} />

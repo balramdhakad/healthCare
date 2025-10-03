@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axiosInstance from "../../../../utilus/axiosInstance";
 import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
 
 const CreatePostForm = ({ communityId, onPostCreated }) => {
   const [title, setTitle] = useState("");
@@ -26,14 +27,14 @@ const CreatePostForm = ({ communityId, onPostCreated }) => {
       );
 
       if (response.data.success) {
-        alert("Post created successfully!");
+        toast.success("Post created successfully!");
         setTitle("");
         setContent("");
         if (onPostCreated) onPostCreated(response.data.data);
       }
     } catch (error) {
       const msg = error?.response?.data?.message || "Failed to create post.";
-      alert(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }

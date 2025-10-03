@@ -1,6 +1,6 @@
 import { FaComment } from "react-icons/fa";
 import defaultProfile from "../../../../../assets/profile.png"
-import { formatDate } from "./FormateDate";
+import FormatDate from "../../../../../components/FormateDate";
 
 const Post = ({ post }) => (
   <div className="bg-white rounded-xl shadow-md p-6 mb-6">
@@ -13,7 +13,8 @@ const Post = ({ post }) => (
       <div>
         <div className="font-semibold text-gray-900">{post?.userId?.name}</div>
         <div className="text-sm text-gray-500">
-          Posted {formatDate(post.createdAt)}
+          Posted {
+          FormatDate(post.createdAt)}
         </div>
       </div>
     </div>

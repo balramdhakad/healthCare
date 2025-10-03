@@ -1,51 +1,38 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axiosInstance from "../../../utilus/axiosInstance";
 import LoadingBar from "../../../components/LoadingBar";
-import { Link, useNavigate } from "react-router-dom";
-import FormatDate from "../../../components/FormateDate";
-import AppointmentCard from "./components/AppointmentCard";
 import RatingModal from "./components/RatingModel";
+import AppointmentsTable from "./components/AppointmentsTable";
 
 const PatientAppointments = () => {
-  const navigate = useNavigate();
-  const { userdata } = useSelector((state) => state.auth);
-  const token = userdata?.token;
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [allAppointments, setAllAppointments] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [appointments, setAppointments] = useState([]);
+  const [filteredAppointments, setFilteredAppointments] = useState([]);
   const [activeTab, setActiveTab] = useState("upcoming");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
+
+  const { userdata } = useSelector((state) => state.auth);
+  const token = userdata?.token;
+
   const handleRatingOpen = (appointment) => {
     setSelectedAppointment(appointment);
     setIsModalOpen(true);
   };
-
   const handleRatingClose = () => {
     setSelectedAppointment(null);
     setIsModalOpen(false);
   };
-
   const handleRatingSubmitted = (appointmentId, newRatingData) => {
-    setAllAppointments((prevAppointments) =>
-      prevAppointments.map((app) =>
+    setAppointments((prev) =>
+      prev.map((app) =>
         app._id === appointmentId ? { ...app, rating: newRatingData } : app
       )
     );
-  };
-
-  const groupAppointmentsByDate = (appointments) => {
-    return appointments.reduce((groups, appointment) => {
-      const dateKey = new Date(appointment.date).toISOString().split("T")[0];
-
-      if (!groups[dateKey]) {
-        groups[dateKey] = [];
-      }
-      groups[dateKey].push(appointment);
-      return groups;
-    }, {});
   };
 
   const fetchAppointments = useCallback(async () => {
@@ -62,7 +49,7 @@ const PatientAppointments = () => {
       });
 
       if (res.data.success) {
-        setAllAppointments(res.data.data);
+        setAppointments(res.data.data);
       } else {
         setError(res.data.message || "Failed to load appointments.");
       }
@@ -77,96 +64,79 @@ const PatientAppointments = () => {
     fetchAppointments();
   }, [fetchAppointments]);
 
-  const now = new Date();
-  const filteredAppointments = allAppointments.filter((app) => {
-    const appointmentDateTime = new Date(app.date);
-    if (activeTab === "upcoming") {
-      return app.status === "scheduled" && appointmentDateTime >= now;
+
+  useEffect(() => {
+    let filtered = [...appointments];
+
+    if (activeTab === "upcoming") filtered = filtered.filter((appt) => appt.status === "scheduled");
+    else if (activeTab === "completed") filtered = filtered.filter((appt) => appt.status === "completed");
+    else if (activeTab === "cancelled") filtered = filtered.filter((appt) => appt.status === "canceled");
+
+    if (searchQuery.trim()) {
+      filtered = filtered.filter(
+        (appt) =>
+          appt.doctorId.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          appt.reasonForVisit?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
     }
-    return true;
-  });
 
-  const groupedAppointments = groupAppointmentsByDate(filteredAppointments);
-  const sortedDates = Object.keys(groupedAppointments).sort((a, b) => {
-    return new Date(b) - new Date(a);
-  });
+    setFilteredAppointments(filtered);
+  }, [activeTab, searchQuery, appointments]);
 
-  const handleViewDetails = (appointment) => {
-    navigate(`/patient/appointments/${appointment._id}`);
-  };
-
-  if (loading) {
-    return <LoadingBar />;
-  }
-
-  if (error) {
-    return <div className="p-6 text-red-600">Error: {error}</div>;
-  }
+  if (loading) return <LoadingBar />;
+  if (error) return <div className="p-6 text-red-600">{error}</div>;
 
   return (
-    <div className="max-w-5xl mx-auto p-6 bg-gray-50 min-h-screen">
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">My Appointments</h1>
-
-      {/* Tabs */}
-      <div className="flex border-b border-gray-200 mb-6">
-        <button
-          onClick={() => setActiveTab("upcoming")}
-          className={`px-4 py-2 text-lg font-semibold border-b-2 transition-colors ${
-            activeTab === "upcoming"
-              ? "text-blue-600 border-blue-600"
-              : "text-gray-500 border-transparent hover:border-gray-300"
-          }`}
-        >
-          Upcoming Appointments
-        </button>
-        <button
-          onClick={() => setActiveTab("all")}
-          className={`px-4 py-2 text-lg font-semibold border-b-2 transition-colors ${
-            activeTab === "all"
-              ? "text-blue-600 border-blue-600"
-              : "text-gray-500 border-transparent hover:border-gray-300"
-          }`}
-        >
-          All Appointments
-        </button>
-      </div>
-
-      {/* Appointment List */}
-      {sortedDates.length === 0 ? (
-        <div className="text-center p-10 bg-white rounded-xl shadow">
-          <p className="text-xl text-gray-500">
-            No {activeTab} appointments found.
-          </p>
+    <div className="bg-gradient-to-br from-gray-50 to-white min-h-screen p-6 md:p-10">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold text-gray-800">My Appointments</h1>
         </div>
-      ) : (
-        <div className="bg-white rounded-xl shadow overflow-hidden divide-y divide-gray-100">
-          {sortedDates.map((dateKey) => (
-            <div key={dateKey} className="mb-4">
-              <h2 className="text-xl font-bold text-gray-900 p-4 bg-gray-100 sticky top-0 border-b">
-                {FormatDate(dateKey)}
-              </h2>
-              <div>
-                {groupedAppointments[dateKey].map((appointment) => (
-                  <AppointmentCard
-                    key={appointment._id}
-                    appointment={appointment}
-                    onViewDetails={handleViewDetails}
-                    onRatingOpen={handleRatingOpen}
-                  />
-                ))}
-              </div>
-            </div>
+
+        {/* Tabs */}
+        <div className="flex space-x-4 mb-6">
+          {["upcoming", "all", "completed", "cancelled"].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-4 py-2 rounded-full font-medium transition ${
+                activeTab === tab
+                  ? "bg-teal-600 text-white"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              }`}
+            >
+              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            </button>
           ))}
         </div>
-      )}
 
-      {isModalOpen && selectedAppointment && (
-        <RatingModal
-          appointment={selectedAppointment}
-          onClose={handleRatingClose}
-          onRatingSubmitted={handleRatingSubmitted}
+        {/* Search */}
+        <div className="mb-6">
+          <input
+            type="text"
+            placeholder="Search by doctor name or reason..."
+            className="w-full md:w-1/2 px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-teal-500"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+
+        {/* Appointments Table */}
+        <AppointmentsTable
+          appointments={filteredAppointments}
+          onRatingOpen={handleRatingOpen}
         />
-      )}
+
+        {/* Rating Modal */}
+        {isModalOpen && selectedAppointment && (
+          <RatingModal
+            appointment={selectedAppointment}
+            onClose={handleRatingClose}
+            onRatingSubmitted={handleRatingSubmitted}
+          />
+        )}
+      </div>
     </div>
   );
 };

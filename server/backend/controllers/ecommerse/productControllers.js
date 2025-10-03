@@ -51,12 +51,15 @@ export const createProduct = async (req, res) => {
   try {
     const {
       name,
+      generic_name,
+      dosage,
+      form,
       description,
       price,
       category,
-      stockQuantity,
-      isPrescriptionRequired,
+      stock_quantity,
       manufacturer,
+      brand,
     } = req.body;
 
     if (
@@ -64,23 +67,25 @@ export const createProduct = async (req, res) => {
       !description ||
       !price ||
       !category ||
-      !stockQuantity ||
-      !isPrescriptionRequired ||
+      !stock_quantity ||
       !manufacturer
     ) {
       res.status(201).json(`please Fill All Details`);
     }
 
-    const imageUrl = req.file.path || null;
+    const image_url = req.file?.path || null;
 
     const newProduct = new Product({
       name,
+      generic_name,
+      brand,
+      dosage,
+      form,
       description,
       price,
+      stock_quantity,
+      image_url,
       category,
-      imageUrl,
-      stockQuantity,
-      isPrescriptionRequired,
       manufacturer,
     });
 
@@ -100,10 +105,15 @@ export const createProduct = async (req, res) => {
 export const updateProduct = async (req, res) => {
   try {
     const { productId } = req.params;
+    console.log(productId)
     const updates = req.body;
 
+    if(req.file){
+      updates.image_url = req.file?.path
+    }
+
     const updatedProduct = await Product.findOneAndUpdate(
-      { productId },
+      { _id : productId },
       updates,
       { new: true }
     );
@@ -163,11 +173,9 @@ export const getProductsByCategory = async (req, res) => {
       products,
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "Server error while fetch product by category.",
-        Error: error?.message,
-      });
+    res.status(500).json({
+      message: "Server error while fetch product by category.",
+      Error: error?.message,
+    });
   }
 };

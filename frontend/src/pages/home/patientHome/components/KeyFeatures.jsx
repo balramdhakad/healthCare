@@ -1,68 +1,92 @@
-
+import { useState, useEffect } from "react";
 import healthImage from "../../../../assets/health.png";
-import community from "../../../../assets/community.png"
-import rating from "../../../../assets/rating.jpg"
-import order from "../../../../assets/order.jpg"
+import community from "../../../../assets/community.png";
+import explore from "../../../../assets/explore.png";
+import order from "../../../../assets/order.jpg";
 import { Link } from "react-router-dom";
 
-const FeatureCard = ({ title, imageSrc, linkText, to }) => {
+const features = [
+  {
+    title: "Maintain Health Records",
+    imageSrc: healthImage,
+    linkText: "Read More",
+    to: "/patient/medical-history",
+  },
+  {
+    title: "Community Support",
+    imageSrc: community,
+    linkText: "Explore Communities",
+    to: "/community",
+  },
+  {
+    title: "Find A Best Doctor",
+    imageSrc: explore,
+    linkText: "Explore Doctor",
+    to: "/doctors",
+  },
+  {
+    title: "Order Healthcare Products",
+    imageSrc: order,
+    linkText: "Shop Now",
+    to: "/order",
+  },
+];
+
+const KeyFeatures = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % features.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <Link
-      to={to}
-      className="relative block rounded-xl shadow-md h-48 sm:h-64 group overflow-hidden transition-transform duration-300 hover:scale-[1.02]"
+    <div
+      className="relative w-full md:h-100 lg:h-120 h-80 overflow-hidden"
     >
-      <img
-        src={imageSrc}
-        alt={title}
-        className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-90"></div>
-      <div className="absolute inset-0 flex flex-col justify-end p-6">
-        <h3 className="text-xl font-bold text-white mb-1 drop-shadow-lg">{title}</h3>
-        <div className="flex items-center text-sm font-semibold text-white drop-shadow-lg">
-          {linkText}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4 ml-1 transition-transform duration-300 group-hover:translate-x-1"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
+      {features.map((feature, index) => (
+        <div
+          key={index}
+          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+            index === currentIndex ? "opacity-100 z-10" : "opacity-0 z-0"
+          }`}
+        >
+          <img
+            src={feature.imageSrc}
+            alt={feature.title}
+            className="w-full h-full object-contain"
+          />
+          <div className="absolute p-3 inset-0 bg-black/10 flex flex-col items-baseline justify-end text-center px-6">
+            <h2 className="md:text-lg text-sm font-bold text-black drop-shadow-lg mb-4">
+              {feature.title}
+            </h2>
+            <Link
+              to={feature.to}
+              className="inline-flex items-center px-3 md:py-2 py-1 bg-white/90 text-black font-semibold rounded-lg shadow-lg hover:bg-white transition"
+            >
+              {feature.linkText}
+              
+            </Link>
+          </div>
         </div>
+      ))}
+
+
+      {/* Dots indicator */}
+      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-3">
+        {features.map((_, index) => (
+          <button
+            key={index}
+            className={`w-3 h-3 rounded-full ${
+              currentIndex === index ? "bg-white" : "bg-gray-600"
+            }`}
+          />
+        ))}
       </div>
-    </Link>
+    </div>
   );
 };
-const KeyFeatures = () => (
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-    <FeatureCard
-      title="Maintain Health Records"
-      imageSrc={healthImage}
-      linkText="Read More"
-      to="/health-records"
-    />
-    <FeatureCard
-      title="Community Support"
-      imageSrc={community}
-      linkText="Explore Communities"
-      to="/community"
-    />
-    <FeatureCard
-      title="Only Authentic Ratings"
-      imageSrc={rating}
-      linkText="View Ratings"
-      to="/ratings"
-    />
-    <FeatureCard
-      title="Order Healthcare Products"
-      imageSrc={order}
-      linkText="Shop Now"
-      to="/shop"
-    />
-  </div>
-);
-
 
 export default KeyFeatures;

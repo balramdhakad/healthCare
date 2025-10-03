@@ -29,12 +29,21 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8 text-[16px] font-medium">
-            <Link
-              to="/doctors"
-              className="text-gray-700 hover:text-blue-600 transition"
-            >
-              Find a Doctor
-            </Link>
+            {userdata?.user?.role === "patient" ? (
+              <Link
+                to="/doctors"
+                className="text-gray-700 hover:text-blue-600 transition"
+              >
+                Find a Doctor
+              </Link>
+            ) : (
+              <Link
+                to="/appointments"
+                className="text-gray-700 hover:text-blue-600 transition"
+              >
+                Appointments
+              </Link>
+            )}
             <Link
               to="/order"
               className="text-gray-700 hover:text-blue-600 transition "
@@ -58,13 +67,6 @@ const Navbar = () => {
 
             {userdata ? (
               <>
-                {/* <Link
-                  to="/patient/dashboard"
-                  className="px-2 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors duration-300"
-                >
-                  Dashboard
-                </Link> */}
-
                 {/* Dashboard Dropdown */}
                 <div className="relative group hidden md:block">
                   <button className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors duration-300">
@@ -73,12 +75,6 @@ const Navbar = () => {
 
                   {/* Dropdown content */}
                   <div className="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-opacity duration-300 z-50">
-                    <Link
-                      to="/dashboard"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
-                    >
-                      Dashboard
-                    </Link>
                     <Link
                       to="/profile"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
@@ -99,12 +95,7 @@ const Navbar = () => {
                         Medical Historty
                       </Link>
                     ) : (
-                      <Link
-                        to="doctor/today"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
-                      >
-                        Today's Appointments
-                      </Link>
+                      <></>
                     )}
                     <Link
                       to="/mycommunity"
@@ -159,13 +150,17 @@ const Navbar = () => {
             >
               Home
             </Link>
-            <Link
-              to="/doctors"
-              onClick={toggleMenu}
-              className="block w-full px-6 py-2 rounded hover:bg-blue-100 transition"
-            >
-              Find a Doctor
-            </Link>
+            {userdata?.user?.role == "patient" ? (
+              <Link
+                to="/doctors"
+                onClick={toggleMenu}
+                className="block w-full px-6 py-2 rounded hover:bg-blue-100 transition"
+              >
+                Find a Doctor
+              </Link>
+            ) : (
+              <></>
+            )}
             <Link
               to="/order"
               onClick={toggleMenu}
@@ -204,16 +199,7 @@ const Navbar = () => {
 
                   {isProfileOpen && (
                     <div className="pl-8 py-1 space-y-1">
-                      <Link
-                        to="/dashboard"
-                        onClick={() => {
-                          toggleMenu();
-                          setIsProfileOpen(false);
-                        }}
-                        className="block px-2 py-2 text-sm text-blue-800 hover:bg-blue-100 rounded transition"
-                      >
-                        Dashboard
-                      </Link>
+ 
                       <Link
                         to="/profile"
                         onClick={() => {
@@ -246,16 +232,17 @@ const Navbar = () => {
                           Medical History
                         </Link>
                       ) : (
-                        <Link
-                          to="/doctor/today"
-                          onClick={() => {
-                            toggleMenu();
-                            setIsProfileOpen(false);
-                          }}
-                          className="block px-2 py-2 text-sm text-blue-800 hover:bg-blue-100 rounded transition"
-                        >
-                          Today's appointment
-                        </Link>
+                        <></>
+                        // <Link
+                        //   to="/doctor/today"
+                        //   onClick={() => {
+                        //     toggleMenu();
+                        //     setIsProfileOpen(false);
+                        //   }}
+                        //   className="block px-2 py-2 text-sm text-blue-800 hover:bg-blue-100 rounded transition"
+                        // >
+                        //   Today's appointment
+                        // </Link>
                       )}
 
                       <Link

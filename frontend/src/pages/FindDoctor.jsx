@@ -45,7 +45,7 @@ const FindDoctor = () => {
     "Orthopedist",
     "Neurologist",
     "Ophthalmologist",
-    "ENT Specialist",
+    "ENT",
   ];
 
   const fetchDoctors = useCallback(async () => {

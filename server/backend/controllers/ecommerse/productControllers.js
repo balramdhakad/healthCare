@@ -3,7 +3,12 @@ import Product from "../../models/ecommerce/productModel.js";
 //all products list
 export const getPropducts = async (req, res) => {
   try {
-    const products = await Product.find();
+    const products = await Product.find()
+      .limit(10)
+      .select("name description price image_url");
+    const bestSellers = await Product.find({ isBestSeller: true })
+      .limit(10)
+      .select("name description price image_url");
     if (!products) {
       res.status(404).json({
         message: `products not found `,
@@ -12,7 +17,7 @@ export const getPropducts = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      data: products,
+      data: { products, bestSellers },
       message: `product fetch success`,
     });
   } catch (error) {
@@ -105,15 +110,15 @@ export const createProduct = async (req, res) => {
 export const updateProduct = async (req, res) => {
   try {
     const { productId } = req.params;
-    console.log(productId)
+    console.log(productId);
     const updates = req.body;
 
-    if(req.file){
-      updates.image_url = req.file?.path
+    if (req.file) {
+      updates.image_url = req.file?.path;
     }
 
     const updatedProduct = await Product.findOneAndUpdate(
-      { _id : productId },
+      { _id: productId },
       updates,
       { new: true }
     );
@@ -156,12 +161,24 @@ export const deleteProduct = async (req, res) => {
 //product by category
 export const getProductsByCategory = async (req, res) => {
   try {
-    const { category } = req.query;
-    if (!category) {
-      return res.status(400).json({ message: "Category query is required." });
+    const { category, search } = req.query;
+
+    let query = {};
+
+    if (category) {
+      query.category = { $regex: new RegExp(category, "i") };
+    }
+    if (search) {
+      query.$or = [
+        { name: { $regex: new RegExp(search, "i") } },
+        { generic_name: { $regex: new RegExp(search, "i") } },
+        { brand: { $regex: new RegExp(search, "i") } },
+        { description: { $regex: new RegExp(search, "i") } },
+        { manufacturer: { $regex: new RegExp(search, "i") } }
+      ];
     }
 
-    const products = await Product.find({ category });
+    const products = await Product.find(query);
 
     if (products.length === 0) {
       return res.status(200).json([]);
@@ -170,12 +187,24 @@ export const getProductsByCategory = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "product by category fetch success",
-      products,
+      data : products,
     });
   } catch (error) {
+    console.log(error)
     res.status(500).json({
       message: "Server error while fetch product by category.",
       Error: error?.message,
     });
+  }
+};
+
+//seed
+
+export const seedProducts = async () => {
+  try {
+    const result = await Product.insertMany(productData);
+    console.log(`${result.length} products inserted successfully!`);
+  } catch (error) {
+    console.error("Error seeding products:", error);
   }
 };

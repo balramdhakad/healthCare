@@ -42,8 +42,6 @@ const ProductSchema = new mongoose.Schema(
       type: Number,
       required: [true, "Price is required"],
       min: [0, "Price must be a positive number"],
-      get: (v) => parseFloat(v.toFixed(2)),
-      set: (v) => parseFloat(v.toFixed(2)),
     },
     stock_quantity: {
       type: Number,
@@ -66,6 +64,10 @@ const ProductSchema = new mongoose.Schema(
 
       required: true,
     },
+    isBestSeller : {
+      type : Boolean,
+      default : false
+    }
 
   },
   {
@@ -73,12 +75,6 @@ const ProductSchema = new mongoose.Schema(
   }
 );
 
-ProductSchema.path("price").get(function (num) {
-  return (num / 100).toFixed(2);
-});
-ProductSchema.path("price").set(function (num) {
-  return num * 100;
-});
 
 const Product = mongoose.model("Product", ProductSchema);
 

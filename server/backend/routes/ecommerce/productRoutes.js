@@ -13,7 +13,7 @@ import upload from "../../config/multer.js";
 const router = express.Router();
 
 //General Routes Available for All
-router.get("/category", getProductsByCategory);
+router.get("/find", getProductsByCategory);
 router.get("/", getPropducts);
 router.get("/:productId", getproductById);
 
@@ -22,6 +22,7 @@ router.post("/",auth("admin"),upload.single("image_url"),createProduct);
 router.put("/:productId",auth("admin"),upload.single("image_url"), updateProduct);
 router.delete("/:productId",auth("admin"), deleteProduct);
 
-
+//seed
+// router.post("/seed", seedProduct);
 
 export default router;

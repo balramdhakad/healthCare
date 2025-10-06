@@ -7,7 +7,6 @@ import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
 import "./index.css";
 import Navbar from "./components/Navbar";
-import Ordernow from "./pages/Ordernow";
 import Findadoctor from "./pages/FindDoctor";
 import Home from "./pages/home/Home";
 import DoctorCategoryPage from "./pages/DoctorCategory/DoctorCategoryPage";
@@ -32,6 +31,11 @@ import EditMedicalHistory from "./pages/AddMedicalHistory/EditMedicalHistory";
 import AppointmentDetails from "./pages/AppointmentDetails/AppointmentDetails";
 import BookAppointment from "./pages/BookAppointment/BookAppointment";
 import PatientProfileView from "./pages/PatientProfileView/PatientProfileView";
+import OrderNow from "./pages/Shop/Ordernow/Ordernow";
+import FindProduct from "./pages/Shop/FindProduct/FindProduct";
+import ProductDetail from "./pages/Shop/ProductDetail/ProductDetail";
+import Cart from "./pages/Shop/Cart/Cart";
+
 
 function App() {
   return (
@@ -50,9 +54,12 @@ function App() {
           <Route path="/patient/medical-history" element={<PatientHistory />} />
           <Route path="/patient/medical-history/add" element={<AddMedicalHistory />} />
           <Route path="/patient/medical-history/add/:id" element={<EditMedicalHistory />} />
-          <Route path="/order" element={<Ordernow />} />
+          <Route path="/shop" element={<OrderNow />} />
+          <Route path="/shop/find" element={<FindProduct />} />
+          <Route path="/shop/product/:id" element={<ProductDetail />} />
           <Route path="/doctors" element={<Findadoctor />} />
           <Route path="/about" element={<About />} />
+          <Route path="/cart" element={<Cart />} />
           <Route
             path="/doctor/category/:specialization"
             element={<DoctorCategoryPage />}

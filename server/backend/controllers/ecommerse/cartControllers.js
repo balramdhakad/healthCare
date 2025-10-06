@@ -28,9 +28,14 @@ export const getUserCart = async (req, res) => {
 };
 
 export const addItemToCart = async (req, res) => {
+  console.log(req.body);
   try {
+
+
     const userId = req.user._id;
     const { productId, quantity } = req.body;
+        console.log(productId);
+
 
     if (!productId || quantity === undefined || quantity <= 0) {
       return res.status(400).json({
@@ -239,12 +244,10 @@ export const clearUserCart = async (req, res) => {
       .status(200)
       .json({ success: true, message: "Cart cleared.", data: cart });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Server Error while clear cart ",
-        Error: error?.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Server Error while clear cart ",
+      Error: error?.message,
+    });
   }
 };

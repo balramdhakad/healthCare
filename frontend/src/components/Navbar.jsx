@@ -45,10 +45,10 @@ const Navbar = () => {
               </Link>
             )}
             <Link
-              to="/order"
+              to="/shop"
               className="text-gray-700 hover:text-blue-600 transition "
             >
-              Order Now
+              Shop
             </Link>
             <Link
               to="/community"
@@ -80,6 +80,12 @@ const Navbar = () => {
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
                     >
                       Profile
+                    </Link>
+                    <Link
+                      to="/cart"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
+                    >
+                      Cart
                     </Link>
                     <Link
                       to="/appointments"
@@ -162,11 +168,11 @@ const Navbar = () => {
               <></>
             )}
             <Link
-              to="/order"
+              to="/shop"
               onClick={toggleMenu}
               className="block w-full px-6 py-2 rounded hover:bg-blue-100 transition"
             >
-              Order Now
+              Shop
             </Link>
             <Link
               to="/community"
@@ -209,6 +215,17 @@ const Navbar = () => {
                         className="block px-2 py-2 text-sm text-blue-800 hover:bg-blue-100 rounded transition"
                       >
                         Profile
+                      </Link>
+ 
+                      <Link
+                        to="/cart"
+                        onClick={() => {
+                          toggleMenu();
+                          setIsProfileOpen(false);
+                        }}
+                        className="block px-2 py-2 text-sm text-blue-800 hover:bg-blue-100 rounded transition"
+                      >
+                        Cart
                       </Link>
                       <Link
                         to="/appointments"

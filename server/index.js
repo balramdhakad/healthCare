@@ -11,7 +11,7 @@ import generalRoutes from "./backend/routes/healthCare/generalRoutes.js";
 import community from "./backend/routes/community/communityRoutes.js";
 import chatRoutes from "./backend/routes/chats/chatRoutes.js";
 import productRoutes from "./backend/routes/ecommerce/productRoutes.js";
-import cartRoutes from "./backend/routes/ecommerce/cardRoutes.js";
+import cartRoutes from "./backend/routes/ecommerce/cartRoutes.js";
 import orderRoutes from "./backend/routes/ecommerce/orderRoutes.js";
 import addressRoutes from "./backend/routes/ecommerce/addressRoutes.js";
 import socketExports from "./backend/config/socket.js";

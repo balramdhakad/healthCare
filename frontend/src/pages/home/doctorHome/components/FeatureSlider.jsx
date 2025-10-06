@@ -38,7 +38,7 @@ const features = [
     borderColor: "hover:border-indigo-500/50",
     imageUrl: order,
     button: "Order Now",
-    navLink: "/order",
+    navLink: "/shop",
   },
 ];
 

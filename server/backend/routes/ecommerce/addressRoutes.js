@@ -15,6 +15,6 @@ router.get("/", auth("patient", "doctor"), getAddresses);
 router.get("/:id", auth("patient", "doctor"), getAddress);
 router.put("/:id", auth("patient", "doctor"), updateAddress);
 router.delete("/:id", auth("patient", "doctor"), deleteAddress);
-router.delete("/:id/default", auth("patient", "doctor"), setDefaultAddress);
+router.put("/:id/default", auth("patient", "doctor"), setDefaultAddress);
 
 export default router;

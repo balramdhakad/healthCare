@@ -32,32 +32,16 @@ const OrderItemSchema = new mongoose.Schema({
         type: Number,
         required: true,
         min: [0, 'Unit price cannot be negative'],
-        get: v => parseFloat(v.toFixed(2)),
-        set: v => parseFloat(v.toFixed(2))
     },
     subtotal: {
         type: Number,
         required: true,
         min: [0, 'Subtotal cannot be negative'],
-        get: v => parseFloat(v.toFixed(2)),
-        set: v => parseFloat(v.toFixed(2))
     }
 }, {
     _id: false
 });
 
-OrderItemSchema.path('unit_price').get(function (num) {
-    return (num / 100).toFixed(2);
-});
-OrderItemSchema.path('unit_price').set(function (num) {
-    return num * 100;
-});
-OrderItemSchema.path('subtotal').get(function (num) {
-    return (num / 100).toFixed(2);
-});
-OrderItemSchema.path('subtotal').set(function (num) {
-    return num * 100;
-});
 
 
 const OrderSchema = new mongoose.Schema({

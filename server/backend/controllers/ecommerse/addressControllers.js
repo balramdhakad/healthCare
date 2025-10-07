@@ -1,7 +1,6 @@
 import Address, { AddressType } from "../../models/ecommerce/AddressModel.js";
 import mongoose from "mongoose";
 
-
 // Create Address
 export const createAddress = async (req, res) => {
   try {
@@ -65,9 +64,10 @@ export const getAddresses = async (req, res) => {
       is_default: -1,
       createdAt: -1,
     });
+
     res
       .status(200)
-      .json({ success: true, count: addresses.length, data: addresses });
+      .json({ success: true, count: addresses.length, data: addresses || [] });
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -108,8 +108,6 @@ export const getAddress = async (req, res) => {
     });
   }
 };
-
-
 
 //Update Address
 export const updateAddress = async (req, res) => {
@@ -200,13 +198,11 @@ export const deleteAddress = async (req, res) => {
       .status(200)
       .json({ success: true, message: "Address deleted successfully." });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Server Error while delete Address ",
-        Error: error.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Server Error while delete Address ",
+      Error: error.message,
+    });
   }
 };
 
@@ -218,8 +214,7 @@ export const setDefaultAddress = async (req, res) => {
   try {
     const userId = req.user._id;
     const addressId = req.params.id;
-    const { addressType = AddressType.SHIPPING } = req.body;
-
+    const { addressType } = req.body;
     if (
       !mongoose.Types.ObjectId.isValid(userId) ||
       !mongoose.Types.ObjectId.isValid(addressId)

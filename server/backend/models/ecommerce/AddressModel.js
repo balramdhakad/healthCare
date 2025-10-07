@@ -14,6 +14,11 @@ const AddressSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    fullname : {
+      type: String,
+      required: [true, "fullname is required"],
+      trim: true,
+    },
     address_line1: {
       type: String,
       required: [true, "Address line 1 is required"],

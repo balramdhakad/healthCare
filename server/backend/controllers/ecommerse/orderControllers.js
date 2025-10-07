@@ -56,7 +56,9 @@ export const placeOrder = async (req, res) => {
       .populate("items.product_id")
       .session(session);
     if (!cart || cart.items.length === 0) {
-      throw new Error("Cannot place an order with an empty cart.");
+      return res
+        .status(400)
+        .json({ success: false, message:"Cannot place an order with an empty cart."});
     }
 
     const shippingAddress = await Address.findOne({
@@ -68,9 +70,9 @@ export const placeOrder = async (req, res) => {
       user_id: userId,
     }).session(session);
     if (!shippingAddress || !billingAddress) {
-      throw new Error(
-        "Invalid shipping or billing address, or address does not belong to your account."
-      );
+      return res.status(401).json({
+        message :"Invalid shipping or billing address, or address does not belong to your account.",
+      })
     }
 
     const orderItems = [];
@@ -81,14 +83,16 @@ export const placeOrder = async (req, res) => {
       const requestedQuantity = cartItem.quantity;
 
       if (!product) {
-        throw new Error(
-          `Product with ID ${cartItem.product_id._id} not found in database.`
-        );
+        return res.status(400).json({
+          success: false,
+          message: `Product with ID ${cartItem.product_id._id} not found in database.`,
+        });
       }
       if (product.stock_quantity < requestedQuantity) {
-        throw new Error(
-          `Insufficient stock for ${product.name}. Available: ${product.stock_quantity}, Requested: ${requestedQuantity}`
-        );
+        return res.status(400).json({
+          success: false,
+          message: `Insufficient stock for ${product.name}. Available: ${product.stock_quantity}, Requested: ${requestedQuantity}`,
+        });
       }
 
       orderItems.push({
@@ -121,7 +125,7 @@ export const placeOrder = async (req, res) => {
     session.endSession();
 
     await newOrder.populate("items.product_id");
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: "Order placed successfully.",
       data: newOrder,
@@ -144,8 +148,8 @@ export const getOrders = async (req, res) => {
 
     const orders = await Order.find({ user_id: userId })
       .populate("items.product_id")
-      .populate("shipping_address_id")
-      .populate("billing_address_id")
+      // .populate("shipping_address_id")
+      // .populate("billing_address_id")
       .sort({ createdAt: -1 });
     res.status(200).json({ success: true, count: orders.length, data: orders });
   } catch (error) {
@@ -190,7 +194,6 @@ export const getOrder = async (req, res) => {
     });
   }
 };
-
 
 export const cancelOrder = async (req, res) => {
   const session = await mongoose.startSession();
@@ -243,7 +246,7 @@ export const cancelOrder = async (req, res) => {
 
     await session.commitTransaction();
     session.endSession();
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Order cancelled successfully.",
       data: order,
@@ -251,11 +254,9 @@ export const cancelOrder = async (req, res) => {
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
-    console.error("Error in cancelOrder:", error);
     res.status(400).json({ success: false, message: error.message });
   }
 };
-
 
 //Only ADmin Controllers
 export const updateOrderStatusAdmin = async (req, res) => {
@@ -294,10 +295,9 @@ export const updateOrderStatusAdmin = async (req, res) => {
       data: updatedOrder,
     });
   } catch (error) {
-    console.error("Error in updateOrderStatusAdmin:", error);
     res
       .status(500)
-      .json({ success: false, message: "Server Error: " + error.message });
+      .json({ success: false, message: "Server Error while update status" , Error : error.message });
   }
 };
 
@@ -337,12 +337,10 @@ export const updatePaymentStatusAdmin = async (req, res) => {
       data: updatedOrder,
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Server Error while update paymewnt status ",
-        Error: error?.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Server Error while update paymewnt status ",
+      Error: error?.message,
+    });
   }
 };

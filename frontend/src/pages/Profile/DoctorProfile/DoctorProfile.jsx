@@ -57,7 +57,7 @@ const DoctorProfile = () => {
   }
 
   if (profile) {
-    return <ProfileCardUI profile={profile} />;
+    return <ProfileCardUI profile={profile} token={userdata?.token} />;
   }
 
   return (

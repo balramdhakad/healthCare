@@ -1,5 +1,6 @@
 import { FaEdit, FaPhoneAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import AddressDropdown from "../../AddressManage/AddressDropdown";
 
 const formatAvailability = (availability) => {
   const days = [
@@ -26,7 +27,7 @@ const formatAvailability = (availability) => {
   return slots;
 };
 
-const ProfileCardUI = ({ profile }) => {
+const ProfileCardUI = ({ profile ,token}) => {
   const operationType = "update";
   const formattedAvailability = formatAvailability(profile.availability);
   const appointmentTypes = profile.appointmentTypes || [];
@@ -54,8 +55,8 @@ const ProfileCardUI = ({ profile }) => {
           </div>
         </div>
 
-        <Link to={"/profile/edit"}  state={operationType}>
-          <button className="flex items-center space-x-2 px-4 py-2 mt-2 text-sm font-medium text-teal-600 border border-teal-600 rounded-lg hover:bg-teal-50 transition duration-150">
+        <Link to={"/profile/edit"} state={operationType}>
+          <button className="flex cursor-pointer items-center space-x-2 px-4 py-2 mt-2 text-sm font-medium text-teal-600 border border-teal-600 rounded-lg hover:bg-teal-50 transition duration-150">
             <FaEdit />
 
             <span>Edit Profile</span>
@@ -163,6 +164,7 @@ const ProfileCardUI = ({ profile }) => {
           </div>
         </div>
       </div>
+      <AddressDropdown token={token} />
     </div>
   );
 };

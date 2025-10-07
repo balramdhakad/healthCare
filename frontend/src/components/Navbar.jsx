@@ -88,6 +88,12 @@ const Navbar = () => {
                       Cart
                     </Link>
                     <Link
+                      to="/myorders"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
+                    >
+                      My Orders
+                    </Link>
+                    <Link
                       to="/appointments"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
                     >
@@ -228,6 +234,16 @@ const Navbar = () => {
                         Cart
                       </Link>
                       <Link
+                        to="/myorders"
+                        onClick={() => {
+                          toggleMenu();
+                          setIsProfileOpen(false);
+                        }}
+                        className="block px-2 py-2 text-sm text-blue-800 hover:bg-blue-100 rounded transition"
+                      >
+                        My Orders
+                      </Link>
+                      <Link
                         to="/appointments"
                         onClick={() => {
                           toggleMenu();
@@ -250,16 +266,7 @@ const Navbar = () => {
                         </Link>
                       ) : (
                         <></>
-                        // <Link
-                        //   to="/doctor/today"
-                        //   onClick={() => {
-                        //     toggleMenu();
-                        //     setIsProfileOpen(false);
-                        //   }}
-                        //   className="block px-2 py-2 text-sm text-blue-800 hover:bg-blue-100 rounded transition"
-                        // >
-                        //   Today's appointment
-                        // </Link>
+
                       )}
 
                       <Link
@@ -275,14 +282,6 @@ const Navbar = () => {
                     </div>
                   )}
                 </div>
-
-                {/* <Link
-                  to="/patient/dashboard"
-                  onClick={toggleMenu}
-                  className="block w-full px-6 py-2 text-gray-600 hover:bg-gray-100 transition duration-300"
-                >
-                  Profile
-                </Link> */}
                 <button
                   onClick={() => dispatch(logOutUser())}
                   className="block w-full px-4 py-2 bg-red-500 text-white rounded hover:bg-blue-600 transition"

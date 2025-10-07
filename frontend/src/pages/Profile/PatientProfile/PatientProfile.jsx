@@ -14,6 +14,8 @@ import LoadingBar from "../../../components/LoadingBar";
 import NoProfileUI from "./components/NoPrNoProfileUIofile";
 import { Link, useNavigate } from "react-router-dom";
 import FormatDate from "../../../components/FormateDate";
+import AddressManager from "../AddressManage/AddressDropdown";
+import AddressDropdown from "../AddressManage/AddressDropdown";
 
 const PatientProfile = () => {
   const navigate = useNavigate();
@@ -188,6 +190,7 @@ const PatientProfile = () => {
           View More History
         </Link>
       </div>
+      <AddressDropdown token={token}/>
     </div>
   );
 };

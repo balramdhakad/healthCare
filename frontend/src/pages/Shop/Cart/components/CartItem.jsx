@@ -1,5 +1,6 @@
 import React from "react";
 import { FaPlus, FaMinus, FaTrash } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const CartItem = ({ item, handleQuantityChange, handleRemove }) => {
   const { product_id, quantity } = item;
@@ -13,7 +14,7 @@ const CartItem = ({ item, handleQuantityChange, handleRemove }) => {
           className="w-12 h-12 rounded bg-gray-100 object-cover"
         />
         <div>
-          <p className="font-medium">{product_id.name}</p>
+          <Link to={`/shop/product/${product_id._id}`} className="font-medium">{product_id.name}</Link>
           <p className="text-gray-500">₹{product_id.price}</p>
         </div>
       </td>

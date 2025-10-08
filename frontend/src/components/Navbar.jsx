@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { logOutUser } from "../features/auth/authSlice";
 import { IoMdClose } from "react-icons/io";
 import { RiMenuFoldLine } from "react-icons/ri";
-import { IoChevronDownSharp, IoChevronUpSharp } from "react-icons/io5";
+import { IoCart, IoChevronDownSharp, IoChevronUpSharp } from "react-icons/io5";
 const Navbar = () => {
   const { userdata } = useSelector((state) => state.auth);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -57,10 +57,10 @@ const Navbar = () => {
               Community
             </Link>
             <Link
-              to="/about"
+              to="/cart"
               className="text-gray-700 hover:text-blue-600 transition"
             >
-              About
+              <IoCart color="red" size={24}/>
             </Link>
 
             {/* Profile Logo */}

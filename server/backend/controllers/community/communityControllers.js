@@ -62,23 +62,58 @@ export const getCommunities = async (req, res) => {
 //get community detils
 export const getCommunityDetails = async (req, res) => {
   const { id } = req.params;
+
   try {
     const community = await Community.findById(id)
       .populate("members", "name")
       .populate("admin", "name");
+
     if (!community) {
       return res
         .status(404)
         .json({ success: false, message: "Community not found." });
     }
-    const posts = await Post.find({ communityId: id })
-      .populate("userId", "name")
-      .sort({ createdAt: -1 });
-    res.status(200).json({ success: true, data: { community, posts } });
+
+    let posts = await Post.find({ communityId: id })
+      .populate("userId", "name role")
+      .sort({ createdAt: -1 })
+      .lean();
+    const postsWithProfilePic = await Promise.all(
+      posts.map(async (post) => {
+        const user = post.userId;
+        let profileInfo = null;
+
+        if (user && user.role) {
+          if (user.role === "patient") {
+            profileInfo = await Patient.findOne(
+              { userId: user._id },
+              "profilePic"
+            ).lean();
+          } else if (user.role === "doctor") {
+            profileInfo = await Doctor.findOne(
+              { userId: user._id },
+              "profilePic"
+            ).lean();
+          }
+        }
+
+        if (profileInfo && profileInfo.profilePic) {
+          post.userId.profilePic = profileInfo.profilePic;
+        } else {
+          post.userId.profilePic = null;
+        }
+
+        return post;
+      })
+    );
+
+    res
+      .status(200)
+      .json({ success: true, data: { community, posts: postsWithProfilePic } });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Server error while fetch community details.",
+      message: "Server error while fetching community details.",
       Error: error?.message,
     });
   }
@@ -136,10 +171,10 @@ export const getMyCommunities = async (req, res) => {
 
   try {
     const communities = await Community.find({
-      members: { $in: [userId] }
+      members: { $in: [userId] },
     })
-    .select('name members postCount') 
-    .sort({ name: 1 });
+      .select("name members postCount")
+      .sort({ name: 1 });
 
     res.status(200).json({
       success: true,

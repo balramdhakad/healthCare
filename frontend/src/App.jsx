@@ -9,10 +9,9 @@ import DoctorCategoryPage from "./pages/DoctorCategory/DoctorCategoryPage";
 import DoctorProfilePage from "./pages/doctorProfilePage/DoctorProfile";
 import CommunityPage from "./pages/community/communityPage/CommunityPage";
 import CreateCommunity from "./pages/community/CreateCommunity";
-import CommunityDetail from "./pages/community/communityDetail/communityDetail";
 import PostComment from "./pages/community/communityDetail/PostComment";
 import TermsOfService from "./pages/info/TermsOfService";
-import About from "./pages/About";
+
 import PrivacyPolicy from "./pages/info/PrivacyPolicy";
 import FAQPage from "./pages/info/FAQPage";
 import ContactUs from "./pages/info/ContactUs";
@@ -34,6 +33,8 @@ import Cart from "./pages/Shop/Cart/Cart";
 import MyOrdersPage from "./pages/Shop/OrderPage/MyOrdersPage";
 import OrderDetail from "./pages/Shop/OrderDetail/OrderDetail";
 import AddressForm from "./pages/AddressForm/AddressForm";
+import CommunityDetail from "./pages/community/communityDetail/CommunityDetail";
+import About from "./pages/About/About";
 
 function App() {
   return (

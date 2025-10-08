@@ -14,6 +14,7 @@ import productRoutes from "./backend/routes/ecommerce/productRoutes.js";
 import cartRoutes from "./backend/routes/ecommerce/cartRoutes.js";
 import orderRoutes from "./backend/routes/ecommerce/orderRoutes.js";
 import addressRoutes from "./backend/routes/ecommerce/addressRoutes.js";
+import adminRoutes from "./backend/routes/admin/adminRoutes.js";
 import socketExports from "./backend/config/socket.js";
 
 const { app, server } = socketExports;
@@ -44,6 +45,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/addresses", addressRoutes);
+app.use("/api/admin", adminRoutes);
 
 server.listen(PORT, () => {
   console.log(`SERVER IS RUNNING AT ${PORT}`);

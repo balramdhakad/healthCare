@@ -138,13 +138,11 @@ export const updateAppointmentStatus = async (req, res) => {
         .json({ success: false, message: "Unauthorized access here" });
     }
 
-    //only completed if approved previously
     if (status === "completed" && appointment.isApproved) {
       appointment.status = "completed";
       appointment.note = req?.body?.note
     }
 
-    //To cancel appoinment
     if (status === "canceled") {
       appointment.status = "canceled";
       appointment.cancelReason = `${req?.body?.cancelReason} - cancel By ${req.user.role}`;

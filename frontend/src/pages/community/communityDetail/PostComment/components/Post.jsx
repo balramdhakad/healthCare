@@ -1,6 +1,7 @@
 import { FaComment } from "react-icons/fa";
-import defaultProfile from "../../../../../assets/profile.png"
+import defaultProfile from "../../../../../assets/profile.png";
 import FormatDate from "../../../../../components/FormateDate";
+import { Link } from "react-router-dom";
 
 const Post = ({ post }) => (
   <div className="bg-white rounded-xl shadow-md p-6 mb-6">
@@ -8,13 +9,27 @@ const Post = ({ post }) => (
       <img
         src={post?.userId?.profilePic || defaultProfile}
         alt={post?.userId?.name}
-        className="w-12 h-12 rounded-full mr-4"
+        className="w-12 h-12 object-cover rounded-full mr-4"
       />
       <div>
-        <div className="font-semibold text-gray-900">{post?.userId?.name}</div>
+        {post.userId.role === "doctor" ? (
+          <Link
+            to={`/doctor/${post.userId._id}`}
+            className="font-semibold text-blue-600"
+          >
+            {post?.userId?.name}
+          </Link>
+        ) : (
+          <div className="font-semibold text-gray-900">
+            {post?.userId?.name}
+          </div>
+        )}
+
         <div className="text-sm text-gray-500">
-          Posted {
-          FormatDate(post.createdAt)}
+          Posted {FormatDate(post.createdAt)}
+        </div>
+        <div className="text-xs font-bold bg-blue-400 text-center rounded-2xl text-white my-2">
+          {post.userId.role.toUpperCase()}
         </div>
       </div>
     </div>
@@ -30,4 +45,4 @@ const Post = ({ post }) => (
   </div>
 );
 
-export default Post
+export default Post;

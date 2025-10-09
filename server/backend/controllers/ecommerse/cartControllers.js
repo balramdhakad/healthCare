@@ -17,7 +17,7 @@ export const getUserCart = async (req, res) => {
     if (!cart) {
       cart = await Cart.create({ user_id: userId, items: [] });
     }
-    res.status(200).json({ success: true, data: cart });
+    res.status(200).json({ success: true, data: cart});
   } catch (error) {
     res.status(500).json({
       success: false,

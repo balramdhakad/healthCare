@@ -1,16 +1,15 @@
 import express from "express"
 import auth from "../../middlewares/authMiddleware.js"
-import { getAllDoctors, getAllUnVerifiesDoctors, getAllVerifiesDoctors, verifyDoctor} from "../../controllers/admin/adminDoctorControllers.js"
+import { getAllDoctors, verifyDoctor} from "../../controllers/admin/adminDoctorControllers.js"
 import { createProduct, deleteProduct, updateProduct } from "../../controllers/admin/adminProductControllers.js"
 import upload from "../../config/multer.js"
 import { getAllOrders, updateOrderStatus } from "../../controllers/admin/adminOrderControllers.js"
 import { deleteCommunity, getAllCommunities } from "../../controllers/admin/amdinCommunityControllers.js"
+import { getDashboardCounts } from "../../controllers/admin/adminGeneralControllers.js"
 const router = express.Router()
 
 //Doctor Routes
 router.get("/getdoctors",auth("admin"),getAllDoctors)
-router.get("/getdoctors/verified",auth("admin"),getAllVerifiesDoctors)
-router.get("/getdoctors/unverified",auth("admin"),getAllUnVerifiesDoctors)
 router.put("/doctor/verify/:id",auth("admin"),verifyDoctor)
 
 //product Routes 
@@ -26,5 +25,7 @@ router.put("/orders/:id/status",auth("admin"),updateOrderStatus)
 router.get("/communities",auth("admin"),getAllCommunities)
 router.delete("/communities/:id",auth("admin"),deleteCommunity)
 
+//get Stats
+router.get("/dashboard-counts", auth("admin"), getDashboardCounts);
 
 export default router

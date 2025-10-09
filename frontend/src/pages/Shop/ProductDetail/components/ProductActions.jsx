@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import { FaShoppingCart, FaPlus, FaMinus, FaTrash } from "react-icons/fa";
-import axiosInstance from "../../../../utilus/axiosInstance";
+import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
+import { addToCart, removeCartItem } from "../../../../features/cart/cartSlice";
 
-const ProductActions = ({ product, isInCart, token, setCart }) => {
+
+const ProductActions = ({ product, isInCart }) => {
   const [quantity, setQuantity] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
+  const dispatch = useDispatch();
+  const { userdata } = useSelector((state) => state.auth);
+  const token = userdata?.token;
 
   const handleQuantityChange = (type) => {
     setQuantity((prev) => {
@@ -17,17 +22,11 @@ const ProductActions = ({ product, isInCart, token, setCart }) => {
 
   const handleAddToCart = async () => {
     if (!token) return toast.error("Please login to add items to cart.");
+    setIsAdding(true);
     try {
-      setIsAdding(true);
-      const res = await axiosInstance.post(
-        "/cart/add",
-        { productId: product._id, quantity },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      toast.success(`${quantity} units of ${product.name} added!`);
-      setCart(res?.data?.data?.items || []);
-    } catch (error) {
-      toast.error(error?.response?.data?.message || "Failed to add item");
+      await dispatch(addToCart({ productId: product._id, quantity })).unwrap();
+    } catch (err) {
+      console.log(err);
     } finally {
       setIsAdding(false);
     }
@@ -36,18 +35,15 @@ const ProductActions = ({ product, isInCart, token, setCart }) => {
   const handleRemoveFromCart = async () => {
     if (!token) return toast.error("Please login to modify cart.");
     try {
-      const res = await axiosInstance.delete(`/cart/remove/${product._id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      toast.success("Product removed from cart.");
-      setCart(res?.data?.data?.items || []);
-    } catch (error) {
-      toast.error(error?.response?.data?.message || "Failed to remove item");
+      await dispatch(removeCartItem(product._id)).unwrap();
+    } catch (err) {
+      console.log(err);
     }
   };
 
   return (
     <div className="mt-8 flex flex-col sm:flex-row items-center gap-4 border-t pt-6">
+
       <div className="flex items-center bg-gray-100 rounded-lg p-2">
         <button
           onClick={() => handleQuantityChange("decrement")}
@@ -70,7 +66,9 @@ const ProductActions = ({ product, isInCart, token, setCart }) => {
         <button
           onClick={() => handleQuantityChange("increment")}
           disabled={
-            quantity >= product.stock_quantity || isAdding || product.stock_quantity === 0
+            quantity >= product.stock_quantity ||
+            isAdding ||
+            product.stock_quantity === 0
           }
           className="p-2 text-teal-600 hover:bg-gray-200 rounded-full disabled:opacity-50"
         >

@@ -18,7 +18,9 @@ const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { userdata } = useSelector((state) => state.auth);
+  const { cartItems } = useSelector((state) => state.cart);
   const token = userdata?.token;
+
 
   const fetchProduct = async () => {
     try {
@@ -31,21 +33,9 @@ const ProductDetail = () => {
     }
   };
 
-  const fetchCart = async () => {
-    if (!token) return;
-    try {
-      const response = await axiosInstance.get("/cart", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setCart(response?.data?.data?.items || []);
-    } catch (error) {
-      toast.error(error?.response?.data?.message || "Failed to fetch cart");
-    }
-  };
-
   useEffect(() => {
     fetchProduct();
-    if (token) fetchCart();
+
   }, [id, token]);
 
   if (loading) return <LoadingBar />;
@@ -56,7 +46,7 @@ const ProductDetail = () => {
       </div>
     );
 
-  const isInCart = cart.some((item) => item.product_id._id === product._id);
+  const isInCart = cartItems.some((item) => item.product_id._id === product._id);
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans antialiased">

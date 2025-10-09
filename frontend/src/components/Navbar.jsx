@@ -5,6 +5,7 @@ import { logOutUser } from "../features/auth/authSlice";
 import { IoMdClose } from "react-icons/io";
 import { RiMenuFoldLine } from "react-icons/ri";
 import { IoCart, IoChevronDownSharp, IoChevronUpSharp } from "react-icons/io5";
+import CartIcon from "./CartIcon";
 const Navbar = () => {
   const { userdata } = useSelector((state) => state.auth);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -56,12 +57,16 @@ const Navbar = () => {
             >
               Community
             </Link>
-            <Link
+            <CartIcon/>
+            {/* <Link
               to="/cart"
-              className="text-gray-700 hover:text-blue-600 transition"
+              className="relative text-gray-700 hover:text-blue-600 transition"
             >
-              <IoCart color="red" size={24}/>
-            </Link>
+              <IoCart size={35} />
+              <span className="absolute -top-1 -left-1 bg-red-600 text-white text-xs font-semibold rounded-full h-5 w-5 flex items-center justify-center">
+                5
+              </span>
+            </Link> */}
 
             {/* Profile Logo */}
 
@@ -211,7 +216,6 @@ const Navbar = () => {
 
                   {isProfileOpen && (
                     <div className="pl-8 py-1 space-y-1">
- 
                       <Link
                         to="/profile"
                         onClick={() => {
@@ -222,7 +226,7 @@ const Navbar = () => {
                       >
                         Profile
                       </Link>
- 
+
                       <Link
                         to="/cart"
                         onClick={() => {
@@ -266,7 +270,6 @@ const Navbar = () => {
                         </Link>
                       ) : (
                         <></>
-
                       )}
 
                       <Link

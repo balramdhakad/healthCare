@@ -35,12 +35,16 @@ import OrderDetail from "./pages/Shop/OrderDetail/OrderDetail";
 import AddressForm from "./pages/AddressForm/AddressForm";
 import CommunityDetail from "./pages/community/communityDetail/CommunityDetail";
 import About from "./pages/About/About";
+import AdminDashboard from "./pages/AdminPages/DashBoard.jsx/AdminDashboard";
+import { useSelector } from "react-redux";
 
 function App() {
+  const { userdata } = useSelector((state) => state.auth);
+  const isAdmin = userdata?.user?.role === "admin";
   return (
     <Router>
       <div className="App">
-        <Navbar />
+        {!isAdmin && <Navbar /> }
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
@@ -90,8 +94,13 @@ function App() {
           <Route path="/info/contact" element={<ContactUs />} />
           <Route path="/profile/edit" element={<EditProfile />} />
           <Route path="/booking/:id" element={<BookAppointment />} />
+
+          {/* admin Routes will protect Later */}
+
+          <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
-        <Footer />
+
+        {!isAdmin && <Footer />}
       </div>
     </Router>
   );

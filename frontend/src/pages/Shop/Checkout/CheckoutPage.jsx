@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axiosInstance from "../../../utilus/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import CartSummary from "./components/CartSummary";
 import AddressSelector from "./components/AddressSelector";
 import PaymentOptions from "./components/PaymentOptions";
+import { clearCart } from "../../../features/cart/cartSlice";
 
 const CheckoutPage = ({ cartItems }) => {
+    const dispatch = useDispatch()
   const { userdata } = useSelector((state) => state.auth);
   const token = userdata?.token;
   const [addresses, setAddresses] = useState([]);
@@ -15,6 +17,7 @@ const CheckoutPage = ({ cartItems }) => {
   const [billingAddress, setBillingAddress] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
   const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const fetchAddresses = async () => {
@@ -40,7 +43,7 @@ const CheckoutPage = ({ cartItems }) => {
 
     try {
       setLoading(true);
-      await axiosInstance.post(
+      const response = await axiosInstance.post(
         "/orders",
         {
           shippingAddressId: shippingAddress,
@@ -49,8 +52,11 @@ const CheckoutPage = ({ cartItems }) => {
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      toast.success("Order placed successfully!");
-      navigate("/myorders");
+      if (response.data.success) {
+        dispatch(clearCart())
+        toast.success("Order placed successfully!");
+        navigate("/myorders");
+      }
     } catch (error) {
       toast.error(error.response?.data?.message || "Order placement failed");
     } finally {

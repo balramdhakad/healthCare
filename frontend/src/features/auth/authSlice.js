@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { handleLoginUser, handleSignupUser } from "./authService";
+import {handleLoginUser, handleSignupUser } from "./authService";
 
 const authSlice = createSlice({
   name: "auth",
@@ -13,7 +13,7 @@ const authSlice = createSlice({
   reducers: {
     logOutUser : (state,action)=>{
       state.userdata = null
-      localStorage.removeItem("user")
+      localStorage.removeItem("user-healthCare")
     }
   },
 
@@ -54,7 +54,7 @@ const authSlice = createSlice({
         state.isError = true;
         state.isLoading = false;
         state.message = action.payload || action.error.message;
-      });
+      })
   },
 });
 
@@ -82,6 +82,8 @@ export const signupUser = createAsyncThunk(
     }
   }
 );
+
+
 
 
 export const {logOutUser} = authSlice.actions

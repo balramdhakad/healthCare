@@ -4,16 +4,19 @@ import Post from "../../models/community/postModel.js";
 import Doctor from "../../models/healthCare/doctorModel.js";
 import Patient from "../../models/healthCare/patientModel.js";
 
+
 const createCommunityFilter = (query) => {
-  const { name, disease } = query;
+  const { search } = query; 
   const filter = {};
 
-  if (name) {
-    filter.name = { $regex: name, $options: "i" };
-  }
-
-  if (disease) {
-    filter.disease = { $regex: disease, $options: "i" };
+  if (search) {
+    const regex = { $regex: search, $options: "i" };
+    filter.$or = [
+      { name: regex },
+      { disease: regex },
+      { "admin.name": regex },
+      { "admin.email": regex },
+    ];
   }
 
   return filter;
@@ -51,6 +54,8 @@ export const getAllCommunities = async (req, res) => {
     });
   }
 };
+
+
 
 //delete Community
 export const deleteCommunity = async (req, res) => {

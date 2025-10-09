@@ -39,13 +39,15 @@ const FindProduct = () => {
       const res = await axiosInstance.get("/products/find", { params });
       let sortedProducts = [...res.data.data];
 
-      if (sortBy === "price-desc") sortedProducts.sort((a, b) => b.price - a.price);
-      else if (sortBy === "price-asc") sortedProducts.sort((a, b) => a.price - b.price);
+      if (sortBy === "price-desc")
+        sortedProducts.sort((a, b) => b.price - a.price);
+      else if (sortBy === "price-asc")
+        sortedProducts.sort((a, b) => a.price - b.price);
 
       setProducts(sortedProducts);
     } catch (err) {
-      console.error(err);
-      setError("Failed to fetch Products. Please try again later.");
+      console.log(err)
+      setError("No Product Found.");
     } finally {
       setLoading(false);
     }

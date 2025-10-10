@@ -1,6 +1,11 @@
 import React from "react";
+import { logOutUser } from "../../../features/auth/authSlice";
+import { useDispatch } from "react-redux";
 
 const SlideBar = ({ setActiveComponent }) => {
+
+
+  const dispatch = useDispatch()
   const menuItems = [
     { label: "Dashboard", key: "dashboard" },
     { label: "Orders", key: "orders" },
@@ -23,6 +28,12 @@ const SlideBar = ({ setActiveComponent }) => {
             {item.label}
           </button>
         ))}
+        <button
+          onClick={() => dispatch(logOutUser())}
+          className="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 transition-colors duration-300"
+        >
+          Logout
+        </button>
       </nav>
     </aside>
   );

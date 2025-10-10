@@ -106,3 +106,67 @@ export const deleteProduct = async (req, res) => {
     });
   }
 };
+
+const createProductFilter = (query) => {
+  const { category, isBestSeller, search } = query;
+  const filter = {};
+
+  if (category) {
+    filter.category = category;
+  }
+
+  if (isBestSeller === "true") {
+    filter.isBestSeller = true;
+  } else if (isBestSeller === "false") {
+    filter.isBestSeller = false;
+  }
+
+  if (search) {
+    const orConditions = [
+      { name: { $regex: new RegExp(search, "i") } },
+      { generic_name: { $regex: new RegExp(search, "i") } },
+      { brand: { $regex: new RegExp(search, "i") } },
+      { manufacturer: { $regex: new RegExp(search, "i") } },
+    ];
+
+    if (Object.keys(filter).length > 0) {
+      return { $and: [filter, { $or: orConditions }] };
+    } else {
+      return { $or: orConditions };
+    }
+  }
+
+  return filter;
+};
+
+export const getAllProducts = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const filter = createProductFilter(req.query);
+
+    const products = await Product.find(filter)
+      .limit(limit)
+      .skip(skip)
+      .sort({ createdAt: -1 })
+      .lean();
+    const totalProducts = await Product.countDocuments(filter);
+
+    res.status(200).json({
+      success: true,
+      page,
+      totalPages: Math.ceil(totalProducts / limit),
+      totalResults: totalProducts,
+      products,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Server Error fetching products.",
+      Error: error.message,
+    });
+  }
+};

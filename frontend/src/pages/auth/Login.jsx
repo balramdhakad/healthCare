@@ -6,14 +6,19 @@ import { loginUser } from "../../features/auth/authSlice";
 
 const Login = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { userdata } = useSelector((state) => state.auth);
 
-  useEffect(()=>{
-    if(userdata){
-      navigate("/")
+useEffect(() => {
+  if (userdata) {
+    if (userdata?.user?.role === "admin") {
+      navigate("/admin");
+    } else {
+      navigate("/");
     }
-  },[userdata])
+  }
+}, [userdata, navigate]);
+
 
   const [formData, setFormData] = useState({
     mobileNo: "",
@@ -45,7 +50,6 @@ const Login = () => {
 
         {/* Form Section */}
         <div className="md:w-1/2 p-15 md:p-10 space-y-6">
-
           <div className="text-center">
             <h2 className="text-2xl font-bold text-gray-900">Welcome back</h2>
             <p className="mt-2 text-sm text-gray-600">

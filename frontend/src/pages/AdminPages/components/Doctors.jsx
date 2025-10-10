@@ -4,6 +4,7 @@ import axiosInstance from "../../../utilus/axiosInstance";
 import toast from "react-hot-toast";
 import Pagination from "./Pagination";
 import LoadingBar from "../../../components/LoadingBar";
+import { Link } from "react-router-dom"
 
 const Doctors = ({ token }) => {
   const [doctors, setDoctors] = useState([]);
@@ -157,12 +158,12 @@ const Doctors = ({ token }) => {
                 </span>
 
                 <div className="flex justify-end space-x-2">
-                  <button
-                    onClick={() => console.log("View doctor", doc._id)}
+                  <Link to={`/doctor/${doc._id}`}
+
                     className="px-3 py-1 border rounded-md text-blue-600 border-blue-300 hover:bg-blue-50 transition text-sm"
                   >
                     View
-                  </button>
+                  </Link>
                   <button
                     onClick={() => handleVerifyToggle(doc._id, doc.verified)}
                     className={getVerificationButtonClasses(doc.verified)}

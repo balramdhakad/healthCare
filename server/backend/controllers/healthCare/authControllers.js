@@ -1,3 +1,4 @@
+
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../../models/healthCare/userModel.js";
@@ -31,6 +32,7 @@ const registerUser = async (req, res) => {
 
     res.status(201).json({
       token,
+      message: "Signup Success",
       user: {
         _id: user._id,
         mobileNo: user.mobileNo,
@@ -67,6 +69,7 @@ const loginUser = async (req, res) => {
 
     res.json({
       token,
+      message: "Login Success",
       user: {
         _id: user._id,
         mobileNo: user.mobileNo,

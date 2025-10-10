@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import OverviewCards from "../components/OverviewCards";
 import Doctors from "../components/Doctors";
@@ -10,6 +9,7 @@ import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import SlideBar from "../components/SliderBar";
 import QuickActions from "../components/QuickActions";
+import { useNavigate } from "react-router-dom";
 
 const AdminDashboard = () => {
   const [counts, setCounts] = useState({
@@ -20,25 +20,38 @@ const AdminDashboard = () => {
     community: 0,
   });
 
-  const [activeComponent, setActiveComponent] = useState("dashboard"); 
+  const [activeComponent, setActiveComponent] = useState("dashboard");
 
   const { userdata } = useSelector((state) => state.auth);
   const token = userdata?.token;
 
+  const navigate = useNavigate();
+
   useEffect(() => {
-    const fetchCounts = async () => {
-      try {
-        const res = await axiosInstance.get("/admin/dashboard-counts", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setCounts(res.data);
-      } catch (err) {
-        toast.error("Error fetching dashboard counts");
-      }
-    };
+    if (!userdata) {
+      navigate("/login");
+    }
+    if (userdata && !(userdata?.user?.role === "admin")) {
+      toast.error("Access Denied")
+      navigate("/");
+    }
+  }, [userdata]);
+
+  const fetchCounts = async () => {
+    try {
+      const response = await axiosInstance.get("/admin/dashboard-counts", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setCounts(response.data);
+    } catch (error) {
+      toast.error("Error fetching dashboard counts");
+    }
+  };
+
+  useEffect(() => {
+    if (!(userdata?.user?.role === "admin")) return;
     fetchCounts();
   }, [token]);
-
 
   const renderComponent = () => {
     switch (activeComponent) {

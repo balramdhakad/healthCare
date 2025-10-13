@@ -5,8 +5,8 @@ import upload from "../../config/multer.js"
 const router = express.Router()
 
 
-router.get("/users",auth,getChatUsers)
-router.get("/:userId",auth,getChat)
-router.post("/:userId",auth,upload.single("image"),sendMessage)
+router.get("/users",auth("doctor","patient","admin"),getChatUsers)
+router.get("/:userId",auth("doctor","patient","admin"),getChat)
+router.post("/:userId",auth("doctor","patient","admin"),upload.single("image"),sendMessage)
 
 export default router

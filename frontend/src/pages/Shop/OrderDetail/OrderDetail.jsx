@@ -35,7 +35,10 @@ const OrderDetail = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setOrder(response.data.data);
+      console.log(response.data.data);
+      
     } catch (err) {
+      console.log(err)
       setError(err.response?.data?.message || "An unexpected error occurred.");
     } finally {
       setLoading(false);
@@ -99,7 +102,7 @@ const OrderDetail = () => {
             <div className="bg-white shadow-md rounded-lg p-6">
               <h2 className="text-xl font-semibold text-gray-900 mb-4">Items</h2>
               {order.items.map((item) => (
-                <OrderItemDisplay key={item.product_id._id} item={item} />
+                <OrderItemDisplay key={item.product_id?._id} item={item} />
               ))}
             </div>
 

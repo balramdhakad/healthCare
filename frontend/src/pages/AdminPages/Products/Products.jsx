@@ -1,12 +1,15 @@
 import React, { useEffect, useState, useCallback } from "react";
 import toast from "react-hot-toast";
-import { initialProductState, productCategories } from "./productConstants";
-import ProductForm from "./ProductForm";
-import Pagination from "./Pagination";
-import FilterBar from "./FilterBar";
-import ProductHeader from "./ProductHeader";
-import ProductTable from "./ProductTable";
+import {
+  initialProductState,
+  productCategories,
+} from "./components/productConstants";
+import ProductForm from "./components/ProductForm";
+import FilterBar from "./components/FilterBar";
+import ProductHeader from "./components/ProductHeader";
+import ProductTable from "./components/ProductTable";
 import axiosInstance from "../../../utilus/axiosInstance";
+import Pagination from "../components/Pagination";
 
 const Products = ({ token }) => {
   const [products, setProducts] = useState([]);
@@ -19,7 +22,6 @@ const Products = ({ token }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [sortOrder, setSortOrder] = useState("newest");
-  const [confirmDelete, setConfirmDelete] = useState(null);
   const limit = 10;
 
   const fetchProducts = useCallback(async () => {
@@ -70,14 +72,15 @@ const Products = ({ token }) => {
     }
   };
 
-  const handleDeleteProduct = async () => {
-    if (!confirmDelete) return;
+  const handleDeleteProduct = async (product) => {
+    const confirm = window.confirm(`Delete "${product.name}" permanently?`);
+    if (!confirm) return;
+
     try {
-      await axiosInstance.delete(`/admin/product/${confirmDelete.id}`, {
+      await axiosInstance.delete(`/admin/product/${product._id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      toast.success(`Product "${confirmDelete.name}" deleted successfully.`);
-      setConfirmDelete(null);
+      toast.success(`Product "${product.name}" deleted successfully.`);
       fetchProducts();
     } catch (error) {
       toast.error(error.response?.data?.message || "Deletion failed.");
@@ -123,7 +126,7 @@ const Products = ({ token }) => {
           setCurrentProduct(p);
           setIsModalOpen(true);
         }}
-        onDelete={(p) => setConfirmDelete({ id: p._id, name: p.name })}
+        onDelete={handleDeleteProduct} 
       />
 
       {!loading && totalPages > 1 && (

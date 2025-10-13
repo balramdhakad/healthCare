@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post("/", auth("patient","doctor"),placeOrder);
 router.get("/", auth("patient","doctor"),getOrders);
-router.get("/:id", auth("patient","doctor"),getOrder);
+router.get("/:id", auth("patient","doctor","admin"),getOrder);
 router.get("/:id/cancel", auth("patient","doctor"),cancelOrder);
 
 //only admin Routes

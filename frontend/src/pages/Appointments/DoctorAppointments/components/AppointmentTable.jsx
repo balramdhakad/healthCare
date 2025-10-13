@@ -5,6 +5,7 @@ import { CgArrowRight } from "react-icons/cg";
 import { Link } from "react-router-dom";
 import StatusBadge from "./StatusBadge";
 import LoadingBar from "../../../../components/LoadingBar";
+import ChatButton from "../../../../components/ChatButton";
 const AppointmentTable = ({ appointments, isLoading, onActionRequest }) => {
   if (isLoading) {
     return <LoadingBar />;
@@ -30,6 +31,7 @@ const AppointmentTable = ({ appointments, isLoading, onActionRequest }) => {
             <th className="px-6 py-3 text-left text-xs font-bold text-teal-800 uppercase tracking-wider w-2/12">
               Status
             </th>
+
             <th className="px-6 py-3 text-right text-xs font-bold text-teal-800 uppercase tracking-wider w-2/12">
               Actions
             </th>
@@ -58,6 +60,13 @@ const AppointmentTable = ({ appointments, isLoading, onActionRequest }) => {
                     <p className="text-md font-semibold text-gray-900 flex items-center mb-1">
                       <FaUserMd className="mr-2 text-blue-500" />{" "}
                       {appt.patientName}
+                      {appt.status !== "pending" && appt.status !== "canceled" ? (
+                        <span className="px-6 py-4 whitespace-nowrap">
+                          <ChatButton id={appt.patientId._id} />
+                        </span>
+                      ) : (
+                        <></>
+                      )}
                     </p>
                     <p className="text-xs text-gray-500 flex items-center">
                       <IoCalendarOutline className="mr-1" />{" "}
@@ -76,6 +85,7 @@ const AppointmentTable = ({ appointments, isLoading, onActionRequest }) => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <StatusBadge status={appt.status} />
                   </td>
+
                   {/* Actions */}
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
                     {appt.status === "pending" && (
@@ -128,4 +138,3 @@ const AppointmentTable = ({ appointments, isLoading, onActionRequest }) => {
 };
 
 export default AppointmentTable;
-

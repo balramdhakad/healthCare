@@ -5,6 +5,7 @@ const QuickActions = ({ setActiveComponent }) => {
     { title: "Manage Doctors", key: "doctors" },
     { title: "Manage Products", key: "products" },
     { title: "Manage Community", key: "community" },
+    { title: "Manage Appointments", key: "appointments" },
   ];
 
   return (

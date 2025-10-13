@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
 import OverviewCards from "../components/OverviewCards";
-import Doctors from "../components/Doctors";
-import Orders from "../components/Orders";
-import Products from "../components/Products";
-import Community from "../components/Community";
+import Community from "../Community/Community";
 import axiosInstance from "../../../utilus/axiosInstance";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import SlideBar from "../components/SliderBar";
 import QuickActions from "../components/QuickActions";
 import { useNavigate } from "react-router-dom";
+import Products from "../Products/Products";
+import Doctors from "../Doctors/Doctors";
+import Orders from "../Orders/Orders";
+import Appointments from "../Appointments/Appointments";
 
 const AdminDashboard = () => {
   const [counts, setCounts] = useState({
@@ -32,7 +33,7 @@ const AdminDashboard = () => {
       navigate("/login");
     }
     if (userdata && !(userdata?.user?.role === "admin")) {
-      toast.error("Access Denied")
+      toast.error("Access Denied");
       navigate("/");
     }
   }, [userdata]);
@@ -61,6 +62,8 @@ const AdminDashboard = () => {
         return <Orders token={token} />;
       case "products":
         return <Products token={token} />;
+      case "appointments":
+        return <Appointments token={token} />;
       case "community":
         return <Community token={token} />;
       default:

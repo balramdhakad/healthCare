@@ -20,8 +20,8 @@ router.get("/",
    getCommunities);
 router.post("/", auth("patient", "doctor"), createCommunity);
 router.get("/getMyCommunities", auth("patient", "doctor" ), getMyCommunities);
-router.get("/post/:id",auth("patient","doctor"), getPost);
-router.get("/:id", auth("patient", "doctor"), getCommunityDetails);
+router.get("/post/:id",auth("patient","doctor","admin"), getPost);
+router.get("/:id", auth("patient", "doctor","admin"), getCommunityDetails);
 router.put("/:id/join", auth("patient", "doctor"), joinCommunity);
 
 

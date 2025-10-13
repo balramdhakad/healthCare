@@ -1,7 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import defaultImage from "../../../assets/doctor.jpeg";
+import { useSelector } from "react-redux";
 const DoctorHeader = ({ doctor }) => {
+  const { userdata } = useSelector((state) => state.auth);
   return (
     <div className="bg-white rounded-xl shadow-lg p-8 flex flex-col md:flex-row items-center gap-6">
       <img
@@ -18,12 +20,17 @@ const DoctorHeader = ({ doctor }) => {
           {doctor?.experience} years of experience
         </p>
       </div>
-      <Link
-        to={`/booking/${doctor.id}`}
-        className="px-3 py-2 bg-blue-400 text-white font-semibold rounded-sm hover:bg-blue-700 transition-colors"
-      >
-        Book Appointment
-      </Link>
+
+      {userdata?.user?.role === "admin" ? (
+        <></>
+      ) : (
+        <Link
+          to={`/booking/${doctor.id}`}
+          className="px-3 py-2 bg-blue-400 text-white font-semibold rounded-sm hover:bg-blue-700 transition-colors"
+        >
+          Book Appointment
+        </Link>
+      )}
     </div>
   );
 };

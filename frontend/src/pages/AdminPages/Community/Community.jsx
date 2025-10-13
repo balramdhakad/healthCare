@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useCallback } from "react";
 import toast from "react-hot-toast";
 import { FaSearch, FaPlus } from "react-icons/fa";
-import LoadingBar from "../../../components/LoadingBar";
+import Pagination from "../components/Pagination";
+import CommunityTable from "./components/CommunityTable";
 import axiosInstance from "../../../utilus/axiosInstance";
-import CommunityTable from "./CommunityTable";
-import Pagination from "./Pagination";
+import LoadingBar from "../../../components/LoadingBar";
 
 const debounce = (func, delay) => {
   let timeoutId;
@@ -103,7 +103,9 @@ const Community = ({ token }) => {
 
       <div className="bg-white shadow-lg rounded-lg overflow-hidden">
         {loading ? (
-          <LoadingBar />
+          <div className="flex justify-center items-center py-10 text-blue-600">
+            <LoadingBar />
+          </div>
         ) : (
           <>
             <CommunityTable communities={communities} onDelete={handleDelete} />

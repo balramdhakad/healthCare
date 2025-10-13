@@ -1,10 +1,11 @@
+import mongoose from "mongoose";
 import Order, {
   OrderStatus,
   PaymentStatus,
 } from "../../models/ecommerce/OrderModel.js";
 
 const createOrderFilter = (query) => {
-  const { orderStatus, paymentStatus, userId } = query;
+  const { orderStatus, paymentStatus, search } = query;
   const filter = {};
 
   if (orderStatus && Object.values(OrderStatus).includes(orderStatus)) {
@@ -15,8 +16,16 @@ const createOrderFilter = (query) => {
     filter.payment_status = paymentStatus;
   }
 
-  if (userId) {
-    filter.user_id = userId;
+  if (search && search.trim() !== "") {
+    const orConditions = [];
+
+    if (mongoose.Types.ObjectId.isValid(search)) {
+      orConditions.push({ _id: search });
+      orConditions.push({ user_id: search });
+    }
+
+
+    if (orConditions.length) filter.$or = orConditions;
   }
 
   return filter;
@@ -97,12 +106,10 @@ export const updateOrderStatus = async (req, res) => {
       order: updatedOrder,
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Server Error updating order status.",
-        Error: error.message
-      });
+    res.status(500).json({
+      success: false,
+      message: "Server Error updating order status.",
+      Error: error.message,
+    });
   }
 };

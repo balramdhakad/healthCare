@@ -56,9 +56,10 @@ export const placeOrder = async (req, res) => {
       .populate("items.product_id")
       .session(session);
     if (!cart || cart.items.length === 0) {
-      return res
-        .status(400)
-        .json({ success: false, message:"Cannot place an order with an empty cart."});
+      return res.status(400).json({
+        success: false,
+        message: "Cannot place an order with an empty cart.",
+      });
     }
 
     const shippingAddress = await Address.findOne({
@@ -71,8 +72,9 @@ export const placeOrder = async (req, res) => {
     }).session(session);
     if (!shippingAddress || !billingAddress) {
       return res.status(401).json({
-        message :"Invalid shipping or billing address, or address does not belong to your account.",
-      })
+        message:
+          "Invalid shipping or billing address, or address does not belong to your account.",
+      });
     }
 
     const orderItems = [];
@@ -175,10 +177,19 @@ export const getOrder = async (req, res) => {
         .json({ success: false, message: "Invalid ID format." });
     }
 
-    const order = await Order.findOne({ _id: orderId, user_id: userId })
-      .populate("items.product_id")
-      .populate("shipping_address_id")
-      .populate("billing_address_id");
+    let order;
+    if (req.user.role === "admin") {
+      order = await Order.findOne({ _id: orderId })
+        .populate("items.product_id")
+        .populate("shipping_address_id")
+        .populate("billing_address_id");
+    } else {
+      order = await Order.findOne({ _id: orderId, user_id: userId })
+        .populate("items.product_id")
+        .populate("shipping_address_id")
+        .populate("billing_address_id");
+    }
+
     if (!order) {
       return res.status(404).json({
         success: false,
@@ -295,9 +306,11 @@ export const updateOrderStatusAdmin = async (req, res) => {
       data: updatedOrder,
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({ success: false, message: "Server Error while update status" , Error : error.message });
+    res.status(500).json({
+      success: false,
+      message: "Server Error while update status",
+      Error: error.message,
+    });
   }
 };
 

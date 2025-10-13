@@ -6,6 +6,7 @@ import AppointmentTable from "./components/AppointmentTable";
 import AppointmentActionModal from "./components/AppointmentActionModal"; 
 import toast from "react-hot-toast";
 
+
 const DoctorAppointments = () => {
     const [appointments, setAppointments] = useState([]);
     const [filterStatus, setFilterStatus] = useState("All");
@@ -174,6 +175,8 @@ const DoctorAppointments = () => {
                     onClose={() => setActionRequest(null)}
                 />
             )}
+
+
         </div>
     );
 };

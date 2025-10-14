@@ -1,28 +1,40 @@
 import React from "react";
 
-const ChatSidebar = ({ users, onlineUsers, onSelectUser, selectedUser }) => {
+const ChatSidebar = ({ users, onlineUsers, selectedUser, onSelectUser }) => {
   return (
-    <div className="w-64 border-r border-gray-200 overflow-y-auto">
-      <h2 className="text-xl font-bold p-4">Chats</h2>
-      <ul>
-        {users.map((user) => {
+    <div className="w-1/4 bg-white border-r border-gray-300 overflow-y-auto">
+      <div className="p-4 font-semibold text-lg border-b bg-blue-600 text-white">
+        USERs
+      </div>
+
+      {users?.length > 0 ? (
+        users.map((user) => {
           const isOnline = onlineUsers.includes(user._id);
           return (
-            <li
-              key={user._id}
-              onClick={() => onSelectUser(user)}
-              className={`p-3 cursor-pointer flex justify-between items-center ${
-                selectedUser?._id === user._id ? "bg-gray-200" : ""
+            <div
+              key={user?._id}
+              className={`flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-gray-100 transition ${
+                selectedUser?._id === user._id ? "bg-blue-50" : ""
               }`}
+              onClick={() => onSelectUser(user)}
             >
-              <span>{user.name}</span>
-              {isOnline && (
-                <span className="w-3 h-3 bg-green-500 rounded-full"></span>
-              )}
-            </li>
+              <div>
+                <div className="font-medium">{user?.name || user?.role}</div>
+                <div className="text-sm text-gray-500">
+                  {isOnline ? "Online" : "Offline"}
+                </div>
+              </div>
+              <div
+                className={`w-3 h-3 rounded-full ${
+                  isOnline ? "bg-green-500" : "bg-gray-400"
+                }`}
+              ></div>
+            </div>
           );
-        })}
-      </ul>
+        })
+      ) : (
+        <div className="p-4 text-gray-400 text-sm">No users found</div>
+      )}
     </div>
   );
 };

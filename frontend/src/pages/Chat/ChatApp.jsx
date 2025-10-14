@@ -1,15 +1,16 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { io } from "socket.io-client";
-
+import axiosInstance from "../../utilus/axiosInstance";
 import ChatSidebar from "./components/ChatSidebar";
 import ChatWindow from "./components/ChatWindow";
-import axiosInstance from "../../utilus/axiosInstance";
+import { useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const ChatApp = () => {
   const { userdata } = useSelector((state) => state.auth);
   const token = userdata?.token;
-  const userId = userdata?.user._id;
+  const userId = userdata?.user?._id;
 
   const [socket, setSocket] = useState(null);
   const [users, setUsers] = useState([]);
@@ -17,71 +18,95 @@ const ChatApp = () => {
   const [messages, setMessages] = useState([]);
   const [onlineUsers, setOnlineUsers] = useState([]);
 
+  const { id: chatUserId } = useParams();
+
   useEffect(() => {
-    if (userId) {
-      const newSocket = io("http://localhost:8080", {
-        query: { userId },
-      });
-      setSocket(newSocket);
+    if (!token) return;
 
-      newSocket.on("getOnlineUser", (online) => {
-        setOnlineUsers(online);
-      });
+    const newSocket = io("http://localhost:8080", {
+      auth: { token },
+      transports: ["websocket"],
+    });
 
-      newSocket.on("newMessage", (message) => {
-        if (
-          selectedUser &&
-          (message.senderId === selectedUser._id ||
-            message.receiverId === selectedUser._id)
-        ) {
-          setMessages((prev) => [...prev, message]);
-        }
-      });
+    setSocket(newSocket);
 
-      return () => newSocket.disconnect();
-    }
-  }, [userId, selectedUser]);
+    newSocket.on("getOnlineUser", (online) => setOnlineUsers(online));
 
-  const fetchUsers = async () => {
+    newSocket.on("receiveMessage", (message) => {
+      if (
+        selectedUser &&
+        (message.senderId === selectedUser._id ||
+          message.receiverId === selectedUser._id)
+      ) {
+        setMessages((prev) => [...prev, message]);
+      }
+    });
+
+    return () => newSocket.disconnect();
+  }, [token, selectedUser]);
+
+  const fetchUsers = useCallback(async () => {
     try {
-      const { data } = await axiosInstance.get("/chats/users", {
+      const res = await axiosInstance.get("/chats/users", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setUsers(data);
-    } catch (err) {
-      console.error("Failed to fetch chat users:", err);
+      if (res.data) setUsers(res.data);
+    } catch (error) {
+      toast.error("Failed to fetch users:", error);
+    }
+  }, [token]);
+
+  const fetchMessages = async (receiverId) => {
+    try {
+      const res = await axiosInstance.get(`/chats/${receiverId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setMessages(res.data || []);
+    } catch (error) {
+      toast.error("Failed to fetch messages:", error);
     }
   };
 
-  const fetchMessages = async (id) => {
+  const fetchUserById = async (userId) => {
     try {
-      const { data } = await axiosInstance.get(`/chats/${id}`, {
+      const res = await axiosInstance.get(`/chats/user/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setMessages(data);
-    } catch (err) {
-      console.error("Failed to fetch messages:", err);
+      console.log(res.data);
+
+      setSelectedUser(res.data);
+    } catch (error) {
+      toast.error("Failed to fetch user by ID:", error);
     }
   };
 
   useEffect(() => {
-    fetchUsers();
-  }, []);
+    if (token) fetchUsers();
+  }, [fetchUsers, token]);
+
+  useEffect(() => {
+    if (chatUserId) {
+      fetchUserById(chatUserId);
+      fetchMessages(chatUserId);
+    }
+  }, [chatUserId]);
+
+  const handleUserSelect = (user) => {
+    setSelectedUser(user);
+    fetchMessages(user?._id);
+  };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-[calc(100vh-70px)] bg-gray-100 rounded-lg shadow-lg overflow-hidden">
       <ChatSidebar
         users={users}
         onlineUsers={onlineUsers}
         selectedUser={selectedUser}
-        onSelectUser={(user) => {
-          setSelectedUser(user);
-          fetchMessages(user._id);
-        }}
+        onSelectUser={handleUserSelect}
       />
       <ChatWindow
-        messages={messages}
         selectedUser={selectedUser}
+        messages={messages}
         socket={socket}
         currentUserId={userId}
         token={token}

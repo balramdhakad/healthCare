@@ -36,15 +36,31 @@ import AddressForm from "./pages/AddressForm/AddressForm";
 import CommunityDetail from "./pages/community/communityDetail/CommunityDetail";
 import About from "./pages/About/About";
 import AdminDashboard from "./pages/AdminPages/DashBoard.jsx/AdminDashboard";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import ChatApp from "./pages/Chat/ChatApp";
+import Room from "./pages/Chat/Room";
+import { useEffect } from "react";
+import axiosInstance from "./utilus/axiosInstance";
+import { logOutUser } from "./features/auth/authSlice";
 
 function App() {
   const { userdata } = useSelector((state) => state.auth);
   const isAdmin = userdata?.user?.role === "admin";
+  const dispatch = useDispatch();
+
+  const checkToken = async () => {
+    const response = await axiosInstance.get("/auth/protected");
+    if (response.data.success === false && response.data.status == "401") {
+      dispatch(logOutUser);
+    }
+  };
+  useEffect(() => {
+    checkToken();
+  }, []);
   return (
     <Router>
       <div className="App">
-        {!isAdmin && <Navbar /> }
+        {!isAdmin && <Navbar />}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
@@ -95,6 +111,9 @@ function App() {
           <Route path="/info/contact" element={<ContactUs />} />
           <Route path="/profile/edit" element={<EditProfile />} />
           <Route path="/booking/:id" element={<BookAppointment />} />
+          <Route path="/chat" element={<ChatApp />} />
+          <Route path="/chat/:id" element={<ChatApp />} />
+          <Route path="/room" element={<Room />} />
 
           {/* admin Routes will protect Later */}
 

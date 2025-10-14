@@ -21,6 +21,7 @@ const DoctorCard = ({ doctor }) => {
       >
         <CgUser className="w-4 h-4 mr-2" /> View Profile
       </Link>
+  
     </div>
   );
 };

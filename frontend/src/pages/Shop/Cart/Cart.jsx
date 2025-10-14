@@ -33,7 +33,7 @@ const Cart = () => {
   };
 
   const subtotal = cartItems.reduce(
-    (acc, item) => acc + item.product_id.price * item.quantity,
+    (acc, item) => acc + item.product_id?.price * item?.quantity,
     0
   );
   const shipping = cartItems.length > 0 ? 50 : 0;
@@ -71,7 +71,7 @@ const Cart = () => {
                   {cartItems.length > 0 ? (
                     cartItems.map((item) => (
                       <CartItem
-                        key={item.product_id._id}
+                        key={item.product_id?._id}
                         item={item}
                         handleQuantityChange={handleQuantityChange}
                         handleRemove={handleRemove}

@@ -6,7 +6,9 @@ const auth = (...requiredRole) => {
     try {
       const authHeader = req.headers.authorization;
       if (!authHeader) {
-        return res.status(401).json({ message: "No token, authorization denied" });
+        return res
+          .status(401)
+          .json({ message: "No token, authorization denied" });
       }
 
       const token = authHeader.split(" ")[1];
@@ -21,20 +23,28 @@ const auth = (...requiredRole) => {
         return res.status(404).json({ message: "User not found" });
       }
 
-
-      // if (user.role !== requiredRole) {
-      //   return res.status(403).json({ message: `Access denied. You must be a ${requiredRole}.` });
-      // }
       if (!requiredRole.includes(user.role)) {
-        return res.status(403).json({ message: `Access denied. You must be a ${requiredRole}.` });
+        return res
+          .status(403)
+          .json({ message: `Access denied. You must be a ${requiredRole}.` });
       }
 
       req.user = user;
       next();
     } catch (error) {
-        return res.status(500).json({ message: "Authentication failed at auth Middleware", Error : error });
+      if (error.name === "TokenExpiredError") {
+        return res
+          .status(401)
+          .json({ message: "Token expired, please log in again." });
+      }
+      return res
+        .status(500)
+        .json({
+          message: "Authentication failed at auth Middleware",
+          Error: error,
+        });
     }
   };
 };
 
-export default auth
+export default auth;

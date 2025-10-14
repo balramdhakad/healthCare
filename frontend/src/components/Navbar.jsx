@@ -57,7 +57,7 @@ const Navbar = () => {
             >
               Community
             </Link>
-            <CartIcon/>
+            <CartIcon />
             {/* <Link
               to="/cart"
               className="relative text-gray-700 hover:text-blue-600 transition"
@@ -85,6 +85,13 @@ const Navbar = () => {
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
                     >
                       Profile
+                    </Link>
+
+                    <Link
+                      to="/chat"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
+                    >
+                      Message
                     </Link>
                     <Link
                       to="/cart"
@@ -227,6 +234,16 @@ const Navbar = () => {
                         Profile
                       </Link>
 
+                      <Link
+                        to="/chat"
+                        onClick={() => {
+                          toggleMenu();
+                          setIsProfileOpen(false);
+                        }}
+                        className="block px-2 py-2 text-sm text-blue-800 hover:bg-blue-100 rounded transition"
+                      >
+                        Message
+                      </Link>
                       <Link
                         to="/cart"
                         onClick={() => {

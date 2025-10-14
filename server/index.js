@@ -40,7 +40,7 @@ app.use("/api/doctor", doctorRoute);
 app.use("/api/appointment", appointmentRoutes);
 app.use("/api/general", generalRoutes);
 app.use("/api/community", community);
-app.use("/api/chat", chatRoutes);
+app.use("/api/chats", chatRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);

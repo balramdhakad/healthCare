@@ -1,8 +1,8 @@
 import socketExports from "../../config/socket.js";
+import Chat from "../../models/chats/chatmodel.js";
 
-const { getReceiverId, io } = socketExports
-import Chat from "../../models/chats/chatmodel.js"
-import User from "../../models/healthCare/userModel.js"
+const { getReceiverId, io } = socketExports;
+import User from "../../models/healthCare/userModel.js";
 
 export const getChat = async (req, res) => {
   const { userId } = req.params;
@@ -18,13 +18,11 @@ export const getChat = async (req, res) => {
     }).sort({ createdAt: 1 });
     res.status(200).json(chat);
   } catch (error) {
-    res
-      .status(404)
-      .json({
-        success: false,
-        message: "server Error while fetch chats",
-        Error: error?.message,
-      });
+    res.status(404).json({
+      success: false,
+      message: "server Error while fetch chats",
+      Error: error?.message,
+    });
   }
 };
 
@@ -56,7 +54,13 @@ export const sendMessage = async (req, res) => {
 
     return res.status(200).json({ message });
   } catch (error) {
-        res.status(500).json({success : false, message: "server Error while send message" ,Error : error?.message});
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "server Error while send message",
+        Error: error?.message,
+      });
   }
 };
 
@@ -87,7 +91,29 @@ export const getChatUsers = async (req, res) => {
 
     res.status(200).json(users);
   } catch (error) {
-        res.status(500).json({success : false, message: "server Error while fetch chatlist users" ,Error : error?.message});
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "server Error while fetch chatlist users",
+        Error: error?.message,
+      });
   }
 };
 
+export const getUserInfo = async (req, res) => {
+  const { userId } = req.params;
+  console.log(userId);
+  try {
+    const user = await User.findById(userId).select("name role");
+    res.status(200).json(user);
+  } catch (error) {
+     res
+      .status(500)
+      .json({
+        success: false,
+        message: "server Error while fetch chatlist users",
+        Error: error?.message,
+      });
+  }
+};

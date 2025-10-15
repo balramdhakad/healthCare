@@ -38,6 +38,7 @@ const AppointmentDetails = () => {
       const response = await axiosInstance.get(`/appointment/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+      console.log(response.data.data)
       setAppointment(response.data.data);
     } catch (error) {
       setIsError(error?.response?.data?.message || "Something went wrong");

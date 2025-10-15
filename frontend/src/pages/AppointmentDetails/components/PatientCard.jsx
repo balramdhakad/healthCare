@@ -3,6 +3,7 @@ import { CgUser } from "react-icons/cg";
 import ChatButton from "../../../components/ChatButton";
 
 const PatientCard = ({ patient }) => {
+  console.log(patient)
   return (
     <div className="bg-blue-50 p-5 rounded-xl border border-blue-200 shadow-md text-center">
       <img

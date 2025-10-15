@@ -1,127 +1,257 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Login from "./pages/auth/Login";
-import Signup from "./pages/auth/Signup";
-import "./index.css";
-import Navbar from "./components/Navbar";
-import Findadoctor from "./pages/FindDoctor";
-import Home from "./pages/home/Home";
-import DoctorCategoryPage from "./pages/DoctorCategory/DoctorCategoryPage";
-import DoctorProfilePage from "./pages/doctorProfilePage/DoctorProfile";
-import CommunityPage from "./pages/community/communityPage/CommunityPage";
-import CreateCommunity from "./pages/community/CreateCommunity";
-import PostComment from "./pages/community/communityDetail/PostComment";
-import TermsOfService from "./pages/info/TermsOfService";
-
-import PrivacyPolicy from "./pages/info/PrivacyPolicy";
-import FAQPage from "./pages/info/FAQPage";
-import ContactUs from "./pages/info/ContactUs";
-import Footer from "./components/Footer";
-import Profile from "./pages/Profile/Profile";
-import Appointments from "./pages/Appointments/Appointments";
-import MyCommunities from "./pages/MyCommunities/MyCommunities";
-import PatientHistory from "./pages/PatientHistory.jsx/PatientHistory";
-import EditProfile from "./pages/Editprofile/EditProfile";
-import AddMedicalHistory from "./pages/AddMedicalHistory/AddMedicalHistory";
-import EditMedicalHistory from "./pages/AddMedicalHistory/EditMedicalHistory";
-import AppointmentDetails from "./pages/AppointmentDetails/AppointmentDetails";
-import BookAppointment from "./pages/BookAppointment/BookAppointment";
-import PatientProfileView from "./pages/PatientProfileView/PatientProfileView";
-import OrderNow from "./pages/Shop/Ordernow/Ordernow";
-import FindProduct from "./pages/Shop/FindProduct/FindProduct";
-import ProductDetail from "./pages/Shop/ProductDetail/ProductDetail";
-import Cart from "./pages/Shop/Cart/Cart";
-import MyOrdersPage from "./pages/Shop/OrderPage/MyOrdersPage";
-import OrderDetail from "./pages/Shop/OrderDetail/OrderDetail";
-import AddressForm from "./pages/AddressForm/AddressForm";
-import CommunityDetail from "./pages/community/communityDetail/CommunityDetail";
-import About from "./pages/About/About";
-import AdminDashboard from "./pages/AdminPages/DashBoard.jsx/AdminDashboard";
+import React, { Suspense, lazy, useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import ChatApp from "./pages/Chat/ChatApp";
-import Room from "./pages/Chat/Room";
-import { useEffect } from "react";
 import axiosInstance from "./utilus/axiosInstance";
 import { logOutUser } from "./features/auth/authSlice";
+import AdminRoute from "./utilus/ProtectedRoutes.jsx/AdminRoute";
+import ProtectedRoute from "./utilus/ProtectedRoutes.jsx/ProtectedRoute";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import "./index.css";
+import Home from "./pages/home/Home";
+import toast from "react-hot-toast";
 
-function App() {
+const Login = lazy(() => import("./pages/auth/Login"));
+const Signup = lazy(() => import("./pages/auth/Signup"));
+const Findadoctor = lazy(() => import("./pages/FindDoctor"));
+const DoctorCategoryPage = lazy(() =>
+  import("./pages/DoctorCategory/DoctorCategoryPage")
+);
+const DoctorProfilePage = lazy(() =>
+  import("./pages/doctorProfilePage/DoctorProfile")
+);
+const CommunityPage = lazy(() =>
+  import("./pages/community/communityPage/CommunityPage")
+);
+const CreateCommunity = lazy(() => import("./pages/community/CreateCommunity"));
+const PostComment = lazy(() =>
+  import("./pages/community/communityDetail/PostComment")
+);
+const TermsOfService = lazy(() => import("./pages/info/TermsOfService"));
+const PrivacyPolicy = lazy(() => import("./pages/info/PrivacyPolicy"));
+const FAQPage = lazy(() => import("./pages/info/FAQPage"));
+const ContactUs = lazy(() => import("./pages/info/ContactUs"));
+const Profile = lazy(() => import("./pages/Profile/Profile"));
+const Appointments = lazy(() => import("./pages/Appointments/Appointments"));
+const MyCommunities = lazy(() => import("./pages/MyCommunities/MyCommunities"));
+const PatientHistory = lazy(() =>
+  import("./pages/PatientHistory.jsx/PatientHistory")
+);
+const EditProfile = lazy(() => import("./pages/Editprofile/EditProfile"));
+const AddMedicalHistory = lazy(() =>
+  import("./pages/AddMedicalHistory/AddMedicalHistory")
+);
+const EditMedicalHistory = lazy(() =>
+  import("./pages/AddMedicalHistory/EditMedicalHistory")
+);
+const AppointmentDetails = lazy(() =>
+  import("./pages/AppointmentDetails/AppointmentDetails")
+);
+const BookAppointment = lazy(() =>
+  import("./pages/BookAppointment/BookAppointment")
+);
+const PatientProfileView = lazy(() =>
+  import("./pages/PatientProfileView/PatientProfileView")
+);
+const OrderNow = lazy(() => import("./pages/Shop/Ordernow/Ordernow"));
+const FindProduct = lazy(() => import("./pages/Shop/FindProduct/FindProduct"));
+const ProductDetail = lazy(() =>
+  import("./pages/Shop/ProductDetail/ProductDetail")
+);
+const Cart = lazy(() => import("./pages/Shop/Cart/Cart"));
+const MyOrdersPage = lazy(() => import("./pages/Shop/OrderPage/MyOrdersPage"));
+const OrderDetail = lazy(() => import("./pages/Shop/OrderDetail/OrderDetail"));
+const AddressForm = lazy(() => import("./pages/AddressForm/AddressForm"));
+const CommunityDetail = lazy(() =>
+  import("./pages/community/communityDetail/CommunityDetail")
+);
+const About = lazy(() => import("./pages/About/About"));
+const AdminDashboard = lazy(() =>
+  import("./pages/AdminPages/DashBoard.jsx/AdminDashboard")
+);
+const ChatApp = lazy(() => import("./pages/Chat/ChatApp"));
+const Room = lazy(() => import("./pages/Chat/Room"));
+
+const AppWrapper = () => {
+  const location = useLocation();
   const { userdata } = useSelector((state) => state.auth);
+  const token = userdata?.token
   const isAdmin = userdata?.user?.role === "admin";
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const checkToken = async () => {
-    const response = await axiosInstance.get("/auth/protected");
-    if (response.data.success === false && response.data.status == "401") {
-      dispatch(logOutUser);
+    if (!token) return;
+    console.log(userdata);
+    try {
+      const response = await axiosInstance.get("/auth/protected", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } catch (error) {
+      if (error?.response.status === 401) {
+        toast.error("Token validation failed : Login Again");
+        dispatch(logOutUser());
+        navigate("/");
+      }
     }
   };
+
   useEffect(() => {
     checkToken();
-  }, []);
+  }, [userdata, dispatch, navigate]);
+
+  const hideLayoutRoutes = ["/login", "/signup", "/chat", "/room", "/admin"];
+  const shouldHideLayout = hideLayoutRoutes.some((path) =>
+    location.pathname.startsWith(path)
+  );
+
   return (
-    <Router>
-      <div className="App">
-        {!isAdmin && <Navbar />}
+    <div className="App">
+      {!isAdmin && <Navbar />}
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+      </Routes>
+
+      <Suspense
+        fallback={
+          <div className="flex justify-center items-center h-screen text-lg font-semibold">
+            Loading...
+          </div>
+        }
+      >
         <Routes>
-          <Route path="/" element={<Home />} />
+          {/* Public Routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/appointments" element={<Appointments />} />
-          <Route
-            path="/patient/appointments/:id"
-            element={<AppointmentDetails />}
-          />
-          <Route path="/mycommunity" element={<MyCommunities />} />
-          <Route path="/community" element={<CommunityPage />} />
-          <Route path="/patient/medical-history" element={<PatientHistory />} />
-          <Route
-            path="/patient/medical-history/add"
-            element={<AddMedicalHistory />}
-          />
-          <Route
-            path="/patient/medical-history/add/:id"
-            element={<EditMedicalHistory />}
-          />
           <Route path="/shop" element={<OrderNow />} />
           <Route path="/shop/find" element={<FindProduct />} />
           <Route path="/shop/product/:id" element={<ProductDetail />} />
           <Route path="/doctors" element={<Findadoctor />} />
           <Route path="/about" element={<About />} />
-          <Route path="/myorders" element={<MyOrdersPage />} />
-          <Route path="/myorders/:id" element={<OrderDetail />} />
-          <Route path="/orderdetails/:id" element={<OrderDetail />} />
-          <Route path="/address/new" element={<AddressForm />} />
-          <Route path="/address/edit/:id" element={<AddressForm />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route
-            path="/doctor/category/:specialization"
-            element={<DoctorCategoryPage />}
-          />
-          <Route path="/doctor/:id" element={<DoctorProfilePage />} />
-          <Route path="/patient/:id" element={<PatientProfileView />} />
-          <Route
-            path="/community/createcommunity"
-            element={<CreateCommunity />}
-          />
-          <Route path="/community/:id" element={<CommunityDetail />} />
-          <Route path="/community/post/:id" element={<PostComment />} />
           <Route path="/info/termsofservice" element={<TermsOfService />} />
           <Route path="/info/privacypolicy" element={<PrivacyPolicy />} />
           <Route path="/info/faqs" element={<FAQPage />} />
           <Route path="/info/contact" element={<ContactUs />} />
-          <Route path="/profile/edit" element={<EditProfile />} />
-          <Route path="/booking/:id" element={<BookAppointment />} />
-          <Route path="/chat" element={<ChatApp />} />
-          <Route path="/chat/:id" element={<ChatApp />} />
-          <Route path="/room" element={<Room />} />
 
-          {/* admin Routes will protect Later */}
+          {/* Protected Routes */}
+          <Route
+            path="/profile"
+            element={<ProtectedRoute element={<Profile />} />}
+          />
+          <Route
+            path="/appointments"
+            element={<ProtectedRoute element={<Appointments />} />}
+          />
+          <Route
+            path="/patient/appointments/:id"
+            element={<ProtectedRoute element={<AppointmentDetails />} />}
+          />
+          <Route
+            path="/mycommunity"
+            element={<ProtectedRoute element={<MyCommunities />} />}
+          />
+          <Route
+            path="/community"
+            element={<ProtectedRoute element={<CommunityPage />} />}
+          />
+          <Route
+            path="/patient/medical-history"
+            element={<ProtectedRoute element={<PatientHistory />} />}
+          />
+          <Route
+            path="/patient/medical-history/add"
+            element={<ProtectedRoute element={<AddMedicalHistory />} />}
+          />
+          <Route
+            path="/patient/medical-history/add/:id"
+            element={<ProtectedRoute element={<EditMedicalHistory />} />}
+          />
+          <Route
+            path="/doctor/category/:specialization"
+            element={<DoctorCategoryPage />}
+          />
+          <Route
+            path="/myorders"
+            element={<ProtectedRoute element={<MyOrdersPage />} />}
+          />
+          <Route
+            path="/myorders/:id"
+            element={<ProtectedRoute element={<OrderDetail />} />}
+          />
+          <Route
+            path="/orderdetails/:id"
+            element={<ProtectedRoute element={<OrderDetail />} />}
+          />
+          <Route
+            path="/address/new"
+            element={<ProtectedRoute element={<AddressForm />} />}
+          />
+          <Route
+            path="/address/edit/:id"
+            element={<ProtectedRoute element={<AddressForm />} />}
+          />
+          <Route path="/cart" element={<ProtectedRoute element={<Cart />} />} />
+          <Route path="/doctor/:id" element={<DoctorProfilePage />} />
+          <Route
+            path="/patient/:id"
+            element={<ProtectedRoute element={<PatientProfileView />} />}
+          />
+          <Route
+            path="/community/createcommunity"
+            element={<ProtectedRoute element={<CreateCommunity />} />}
+          />
+          <Route
+            path="/community/:id"
+            element={<ProtectedRoute element={<CommunityDetail />} />}
+          />
+          <Route
+            path="/community/post/:id"
+            element={<ProtectedRoute element={<PostComment />} />}
+          />
+          <Route
+            path="/profile/edit"
+            element={<ProtectedRoute element={<EditProfile />} />}
+          />
+          <Route path="/booking/:id"  
+          element={<ProtectedRoute element={<BookAppointment />} />}/>
 
-          <Route path="/admin" element={<AdminDashboard />} />
+
+          <Route
+            path="/chat"
+            element={<ProtectedRoute element={<ChatApp />} />}
+          />
+          <Route
+            path="/chat/:id"
+            element={<ProtectedRoute element={<ChatApp />} />}
+          />
+          <Route path="/room" element={<ProtectedRoute element={<Room />} />} />
+
+          {/* Admin Route */}
+          <Route
+            path="/admin"
+            element={<AdminRoute element={<AdminDashboard />} />}
+          />
         </Routes>
+      </Suspense>
 
-        {!isAdmin && <Footer />}
-      </div>
+      {!isAdmin && !shouldHideLayout && <Footer />}
+    </div>
+  );
+};
+
+function App() {
+  return (
+    <Router>
+      <AppWrapper />
     </Router>
   );
 }

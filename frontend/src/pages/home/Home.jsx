@@ -4,10 +4,16 @@ import DoctorHome from "./doctorHome/DoctorHome";
 import LoadingBar from "../../components/LoadingBar";
 
 const Home = () => {
-    const { userdata } = useSelector((state) => state.auth);
+  const { userdata } = useSelector((state) => state.auth);
 
   return (
-    <>{userdata?.user?.role === "doctor" ?  <DoctorHome /> : <PatientHome />}</>
+    <>
+      {userdata?.user?.role === "doctor" ? (
+        <DoctorHome />
+      ) : (
+        <PatientHome userdata={userdata} />
+      )}
+    </>
   );
 };
 

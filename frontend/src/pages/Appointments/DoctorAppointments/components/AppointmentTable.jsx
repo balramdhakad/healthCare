@@ -42,7 +42,7 @@ const AppointmentTable = ({ appointments, isLoading, onActionRequest }) => {
             appointments.map((appt) => {
               return (
                 <tr
-                  key={appt._id}
+                  key={appt?._id}
                   className="hover:bg-teal-50/50 transition duration-150"
                 >
                   {/* Time */}
@@ -52,17 +52,17 @@ const AppointmentTable = ({ appointments, isLoading, onActionRequest }) => {
                   {/* Token No */}
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <span className="bg-gray-200 text-gray-800 px-3 py-1 rounded-full">
-                      {appt.tokenNo || "-"}
+                      {appt?.tokenNo || "-"}
                     </span>
                   </td>
                   {/* Patient Name & Date */}
                   <td className="px-6 py-4 whitespace-nowrap">
                     <p className="text-md font-semibold text-gray-900 flex items-center mb-1">
                       <FaUserMd className="mr-2 text-blue-500" />{" "}
-                      {appt.patientName}
-                      {appt.status !== "pending" && appt.status !== "canceled" ? (
+                      {appt.patientName || ""}
+                      {appt?.status !== "pending" && appt?.status !== "canceled" ? (
                         <span className="px-6 py-4 whitespace-nowrap">
-                          <ChatButton id={appt.patientId._id} />
+                          <ChatButton id={appt?.patientId?._id} />
                         </span>
                       ) : (
                         <></>
@@ -70,27 +70,27 @@ const AppointmentTable = ({ appointments, isLoading, onActionRequest }) => {
                     </p>
                     <p className="text-xs text-gray-500 flex items-center">
                       <IoCalendarOutline className="mr-1" />{" "}
-                      {appt.date.split("T")[0]}
+                      {appt?.date?.split("T")[0]}
                     </p>
                   </td>
                   {/* Reason */}
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 truncate max-w-xs">
-                    <p className="truncate">{appt.reasonForVisit || "N/A"}</p>
+                    <p className="truncate">{appt?.reasonForVisit || "N/A"}</p>
                     <p className="text-xs text-gray-500 mt-1 flex items-center capitalize">
                       <FaVideo className="mr-1 text-teal-600" />{" "}
-                      {appt.appointmentType}
+                      {appt?.appointmentType}
                     </p>
                   </td>
                   {/* Status */}
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <StatusBadge status={appt.status} />
+                    <StatusBadge status={appt?.status} />
                   </td>
 
                   {/* Actions */}
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                    {appt.status === "pending" && (
+                    {appt?.status === "pending" && (
                       <button
-                        onClick={() => onActionRequest(appt._id, "Approve")}
+                        onClick={() => onActionRequest(appt?._id, "Approve")}
                         className="text-white bg-green-500 hover:bg-green-600 px-3 py-1 rounded text-sm font-semibold transition"
                       >
                         Approve
@@ -99,13 +99,13 @@ const AppointmentTable = ({ appointments, isLoading, onActionRequest }) => {
                     {appt.status === "scheduled" && (
                       <div className="mt-1">
                         <button
-                          onClick={() => onActionRequest(appt._id, "Complete")}
+                          onClick={() => onActionRequest(appt?._id, "Complete")}
                           className="text-white bg-blue-500 hover:bg-blue-600 px-3 py-1 rounded text-sm font-semibold transition mr-2"
                         >
                           Complete
                         </button>
                         <button
-                          onClick={() => onActionRequest(appt._id, "Cancel")}
+                          onClick={() => onActionRequest(appt?._id, "Cancel")}
                           className="text-white bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-sm font-semibold transition"
                         >
                           Cancel
@@ -115,7 +115,7 @@ const AppointmentTable = ({ appointments, isLoading, onActionRequest }) => {
 
                     {/* View Details Button */}
                     <Link
-                      to={`/patient/appointments/${appt._id}`}
+                      to={`/patient/appointments/${appt?._id}`}
                       className="text-blue-600 hover:text-blue-900 transition flex items-center ml-auto w-fit font-medium border-b border-blue-600 mt-2"
                     >
                       View Details <CgArrowRight className="w-3 h-3 ml-2" />

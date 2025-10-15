@@ -11,7 +11,7 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dispatch = useDispatch();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  console.log(userdata);
+
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -30,19 +30,19 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8 text-[16px] font-medium">
-            {userdata?.user?.role === "patient" ? (
-              <Link
-                to="/doctors"
-                className="text-gray-700 hover:text-blue-600 transition"
-              >
-                Find a Doctor
-              </Link>
-            ) : (
+            {userdata?.user?.role === "doctor" ? (
               <Link
                 to="/appointments"
                 className="text-gray-700 hover:text-blue-600 transition"
               >
                 Appointments
+              </Link>
+            ) : (
+              <Link
+                to="/doctors"
+                className="text-gray-700 hover:text-blue-600 transition"
+              >
+                Find a Doctor
               </Link>
             )}
             <Link

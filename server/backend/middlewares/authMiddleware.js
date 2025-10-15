@@ -37,12 +37,10 @@ const auth = (...requiredRole) => {
           .status(401)
           .json({ message: "Token expired, please log in again." });
       }
-      return res
-        .status(500)
-        .json({
-          message: "Authentication failed at auth Middleware",
-          Error: error,
-        });
+      return res.status(500).json({
+        message: "Authentication failed at auth Middleware",
+        Error: error,
+      });
     }
   };
 };

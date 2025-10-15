@@ -32,10 +32,7 @@ const getReceiverId = (userId) => {
 
 io.on("connection", (socket) => {
   const token = socket.handshake.auth?.token;
-  console.log(`token : ${token}`)
   const userId = verifyToken(token);
-
-  console.log(`user is connected ${userId} :: ${socket.id}`)
 
   if (!userId) {
     socket.disconnect(true);

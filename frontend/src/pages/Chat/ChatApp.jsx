@@ -72,7 +72,6 @@ const ChatApp = () => {
       const res = await axiosInstance.get(`/chats/user/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      console.log(res.data);
 
       setSelectedUser(res.data);
     } catch (error) {
@@ -110,6 +109,7 @@ const ChatApp = () => {
         socket={socket}
         currentUserId={userId}
         token={token}
+        chatUserId={chatUserId}
       />
     </div>
   );

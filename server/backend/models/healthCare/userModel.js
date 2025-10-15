@@ -2,10 +2,10 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
-    name : {
-      type : String
+    name: {
+      type: String,
     },
-    
+
     mobileNo: {
       type: Number,
       required: true,
@@ -15,15 +15,19 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    role : {
-        type : String,
-        enum : ["doctor","patient","admin"],
-        require : true
-    }
+    role: {
+      type: String,
+      enum: ["doctor", "patient", "admin"],
+      require: true,
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
 
 const User = mongoose.model("User", userSchema);
 
-export default User
+export default User;

@@ -10,9 +10,11 @@ import TopLevelActions from "./components/TopLevelActions";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import axiosInstance from "../../../utilus/axiosInstance";
 import Benefits from "./components/Benefits";
+import PatientProfileMinimal from "../../../components/PatientProfileMinimal";
 
 const HorizontalCarousel = ({ title, children, scrollAmount = 300 }) => {
   const carouselRef = useRef(null);
+
 
   const scrollLeft = () => {
     if (carouselRef.current) {
@@ -75,7 +77,7 @@ const HorizontalCarousel = ({ title, children, scrollAmount = 300 }) => {
   );
 };
 
-const PatientHomepage = () => {
+const PatientHomepage = ({userdata}) => {
   const [doctors, setDoctors] = useState([]);
   const [communities, setCommunities] = useState([]);
   const [feedbacks, setFeedbacks] = useState([]);
@@ -95,6 +97,10 @@ const PatientHomepage = () => {
   return (
     <div className="bg-gradient-to-b from-gray-50 to-white min-h-screen">
       <div className="container mx-auto px-6 md:px-12 lg:px-20 py-4 space-y-16">
+        {
+          userdata ? 
+          <><PatientProfileMinimal/></> : <></>
+        }
         <div className="space-y-0">
           {/* <SectionTitle title="Features You Will Love" /> */}
           <KeyFeatures />
@@ -129,7 +135,7 @@ const PatientHomepage = () => {
             ))}
           </HorizontalCarousel>
 
-          <Benefits/>
+          <Benefits />
         </div>
       </div>
     </div>

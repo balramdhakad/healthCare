@@ -13,6 +13,7 @@ const ChatWindow = ({
   socket,
   currentUserId,
   token,
+  chatUserId
 }) => {
   const [newMessage, setNewMessage] = useState("");
   const [image, setImage] = useState(null);
@@ -79,7 +80,7 @@ const ChatWindow = ({
     }
   };
 
-  if (!selectedUser)
+  if (!selectedUser && !chatUserId)
     return (
       <div className="flex-1 flex items-center justify-center text-gray-500">
         Select a user to start chatting 💬
@@ -89,7 +90,7 @@ const ChatWindow = ({
   return (
     <div className="flex flex-col flex-1">
       <div className="px-4 py-3 bg-white flex text-blue-800 border-b font-semibold text-lg shadow-sm">
-        {selectedUser.name || "User"}
+        {selectedUser?.name || "User"}
 
         <Link to={`/room`} target="_blank" className="ml-auto">
           <IoMdVideocam size={20} />
@@ -100,7 +101,7 @@ const ChatWindow = ({
         {localMessages?.length > 0 ? (
           localMessages.map((msg, i) => (
             <MessageBubble
-              key={msg._id || i}
+              key={msg._id}
               message={msg}
               isOwn={msg.senderId === currentUserId}
             />

@@ -1,6 +1,7 @@
 import React from "react";
 
 const ChatSidebar = ({ users, onlineUsers, selectedUser, onSelectUser }) => {
+  console.log(users)
   return (
     <div className="w-1/4 bg-white border-r border-gray-300 overflow-y-auto">
       <div className="p-4 font-semibold text-lg border-b bg-blue-600 text-white">

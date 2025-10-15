@@ -67,7 +67,6 @@ export const getAllDoctors = async (req, res) => {
 
 //verify Doctor and Unverify as well
 export const verifyDoctor = async (req, res) => {
-  console.log(req.body);
   try {
     const doctorId = req.params.id;
 

@@ -75,7 +75,11 @@ const Doctors = ({ token }) => {
 
   return (
     <div className="p-6 min-h-screen">
-      <h1 className="text-3xl font-bold mb-6">Doctors</h1>
+      <h1 className="text-3xl font-bold py-4 text-gray-900">
+        Doctors
+      </h1>
+
+  
 
       <DoctorFilters
         tab={tab}

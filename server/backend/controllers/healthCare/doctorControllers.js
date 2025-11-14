@@ -223,29 +223,22 @@ export const getDoctorAvailability = async (req, res) => {
     }
 
     const day = new Date(date).toLocaleDateString("en-IN", { weekday: "long" });
-    const availability = doctor.availability.find((a) => a.day === day);
+    const availabilityForDay = doctor.availability.filter((a) => a.day === day);
 
-    if (!availability) {
+    if (!availabilityForDay.length) {
       return res.status(200).json({ success: true, slots: [] });
     }
 
-    const slots = [];
-    let [h, m] = availability.startTime.split(":").map(Number);
-    const [endH, endM] = availability.endTime.split(":").map(Number);
+    const slots = availabilityForDay.map((range) => {
+      const formatTime = (time) => {
+        let [h, m] = time.split(":").map(Number);
+        const ampm = h >= 12 ? "PM" : "AM";
+        h = h % 12 || 12;
+        return `${h}:${m.toString().padStart(2, "0")} ${ampm}`;
+      };
 
-    while (h < endH || (h === endH && m < endM)) {
-      const time = `${String(h).padStart(2, "0")}:${String(m).padStart(
-        2,
-        "0"
-      )}`;
-      slots.push(time);
-
-      m += availability.slotDuration;
-      if (m >= 60) {
-        h += Math.floor(m / 60);
-        m = m % 60;
-      }
-    }
+      return `${formatTime(range.startTime)} - ${formatTime(range.endTime)}`;
+    });
 
     res.json({ success: true, slots });
   } catch (err) {

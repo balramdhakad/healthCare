@@ -11,6 +11,7 @@ import Products from "../Products/Products";
 import Doctors from "../Doctors/Doctors";
 import Orders from "../Orders/Orders";
 import Appointments from "../Appointments/Appointments";
+import { MdOutlineMenu } from "react-icons/md";
 
 const AdminDashboard = () => {
   const [counts, setCounts] = useState({
@@ -22,17 +23,15 @@ const AdminDashboard = () => {
   });
 
   const [activeComponent, setActiveComponent] = useState("dashboard");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const { userdata } = useSelector((state) => state.auth);
   const token = userdata?.token;
-
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!userdata) {
-      navigate("/login");
-    }
-    if (userdata && !(userdata?.user?.role === "admin")) {
+    if (!userdata) navigate("/login");
+    if (userdata && userdata?.user?.role !== "admin") {
       toast.error("Access Denied");
       navigate("/");
     }
@@ -44,14 +43,13 @@ const AdminDashboard = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCounts(response.data);
-    } catch (error) {
+    } catch {
       toast.error("Error fetching dashboard counts");
     }
   };
 
   useEffect(() => {
-    if (!(userdata?.user?.role === "admin")) return;
-    fetchCounts();
+    if (userdata?.user?.role === "admin") fetchCounts();
   }, [token]);
 
   const renderComponent = () => {
@@ -77,21 +75,43 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      <SlideBar setActiveComponent={setActiveComponent} />
-      <main className="flex-1 p-8">
-        <h1 className="text-3xl font-bold text-gray-800">
-          {activeComponent.charAt(0).toUpperCase() + activeComponent.slice(1)}
-        </h1>
-        <p className="text-gray-500 mb-6">
-          {activeComponent === "dashboard"
-            ? "An overview of key metrics and quick actions."
-            : ""}
-        </p>
-        {renderComponent()}
-      </main>
+    <div className="relative flex min-h-screen overflow-hidden">
+      <SlideBar
+        setActiveComponent={setActiveComponent}
+        isOpen={sidebarOpen}
+        setIsOpen={setSidebarOpen}
+      />
+
+      <div
+        className={`flex-1 flex flex-col transition-all duration-300 ${
+          sidebarOpen ? "md:ml-64" : "ml-0"
+        }`}
+      >
+
+        <div className="md:hidden flex items-center justify-between bg-white p-4 shadow fixed top-0 left-0 right-0 z-30">
+          <h2 className="text-xl font-bold text-blue-600">HealthConnect</h2>
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="text-gray-700 text-2xl focus:outline-none"
+          >
+            <MdOutlineMenu />
+          </button>
+        </div>
+
+        <main
+          className="flex-1 overflow-hidden md:p-4 mt-16 md:mt-0 "
+        >
+
+          {activeComponent === "dashboard" && (
+            <p className="text-gray-500 mb-6">
+              An overview of key metrics and quick actions.
+            </p>
+          )}
+          {renderComponent()}
+        </main>
+      </div>
     </div>
   );
 };
 
-export default AdminDashboard;
+export default AdminDashboard; 

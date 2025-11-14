@@ -41,8 +41,8 @@ const MyOrdersPage = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen overflow-x-hidden bg-gray-100">
+      <div className="mx-auto py-8 px-4 sm:px-6 lg:px-8">
         {/* Page Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-extrabold text-gray-900">My Orders</h1>
@@ -69,8 +69,8 @@ const MyOrdersPage = () => {
 
         {/* Orders Table */}
         {!loading && !error && (
-          <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-            <table className="min-w-full divide-y divide-gray-200">
+          <div className="bg-white shadow-lg rounded-lg overflow-x-auto">
+            <table className="w-full divide-y divide-gray-200 overflow-y-hidden">
               <thead className="bg-gray-50">
                 <tr>
                   <th

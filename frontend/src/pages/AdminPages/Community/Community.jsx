@@ -81,12 +81,8 @@ const Community = ({ token }) => {
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-900">Communities</h1>
-        <button
-          onClick={() => console.log("Open Create Community")}
-          className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md shadow-md hover:bg-blue-700 transition"
-        >
-          <FaPlus className="mr-2" /> Create Community
-        </button>
+
+
       </div>
 
       <div className="bg-white shadow-lg rounded-lg p-6 mb-8">

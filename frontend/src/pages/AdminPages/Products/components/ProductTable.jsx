@@ -11,17 +11,9 @@ const ProductTable = ({
   onDelete,
 }) => {
   const TableHeader = () => (
-    <div className="grid grid-cols-7 font-semibold border-b p-4 text-gray-700 bg-gray-50">
+    <div className="hidden md:grid grid-cols-7 font-semibold border-b p-4 text-gray-700 bg-gray-50">
       <span>IMAGE</span>
-      <span
-        className="flex items-center space-x-1 cursor-pointer"
-        onClick={() =>
-          setSortOrder(sortOrder === "newest" ? "oldest" : "newest")
-        }
-      >
-        <span>NAME</span>
-        <FaSort className="text-gray-500" />
-      </span>
+      <span>NAME</span>
       <span>CATEGORY</span>
       <span>PRICE</span>
       <span>STOCK</span>
@@ -33,6 +25,7 @@ const ProductTable = ({
   return (
     <div className="bg-white shadow-xl rounded-lg overflow-hidden">
       <TableHeader />
+
       {loading ? (
         <div className="flex justify-center items-center py-10 text-blue-600">
           <LoadingBar />
@@ -41,26 +34,52 @@ const ProductTable = ({
         products.map((p) => (
           <div
             key={p._id}
-            className="grid grid-cols-7 items-center border-b p-4 hover:bg-gray-50 transition"
+            className="border-b p-4 hover:bg-gray-50 transition flex flex-col md:grid md:grid-cols-7 md:items-center"
           >
-            <img
-              src={p.image_url || "/placeholder.png"}
-              alt={p.name}
-              className="w-12 h-12 object-cover rounded"
-            />
-            <span className="font-medium text-gray-800 truncate flex items-center">
-              {p.name}{" "}
-              {p.isBestSeller && (
-                <FaStar className="text-yellow-500 ml-2" title="Best Seller" />
-              )}
+
+            <div className="flex items-center space-x-4">
+              <img
+                src={p.image_url || ""}
+                alt={p.name}
+                className="w-12 h-12 object-cover rounded"
+              />
+
+              </div>
+
+              <div className="flex flex-col">
+                <span className="font-medium text-gray-800 flex items-center">
+                  {p.name}
+                  {p.isBestSeller && (
+                    <FaStar
+                      className="text-yellow-500 ml-2"
+                      title="Best Seller"
+                    />
+                  )}
+                </span>
+
+                <div className="md:hidden text-gray-500 text-sm mt-1">
+                  {p.category} | ₹{p.price.toFixed(2)} | {p.stock_quantity} in
+                  stock
+                </div>
+              </div>
+            
+
+
+            <span className="hidden md:block text-gray-600 text-sm">
+              {p.category}
             </span>
-            <span className="text-gray-600 text-sm">{p.category}</span>
-            <span className="text-gray-600 text-sm">₹{p.price.toFixed(2)}</span>
-            <span className="text-gray-600 text-sm">
+            <span className="hidden md:block text-gray-600 text-sm">
+              ₹{p.price.toFixed(2)}
+            </span>
+            <span className="hidden md:block text-gray-600 text-sm">
               {p.stock_quantity} in stock
             </span>
-            <span className="text-gray-600 text-sm">{p.manufacturer}</span>
-            <div className="flex justify-end space-x-2">
+            <span className="hidden md:block text-gray-600 text-sm">
+              {p.manufacturer}
+            </span>
+
+ 
+            <div className="flex justify-end space-x-2 mt-2 md:mt-0">
               <button
                 onClick={() => onEdit(p)}
                 className="p-2 rounded-full text-indigo-600 hover:bg-indigo-50 transition"

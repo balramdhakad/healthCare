@@ -58,14 +58,7 @@ const Footer = () => {
             <div>
               <h4 className="font-semibold text-gray-200 mb-3">Support</h4>
               <ul className="space-y-2 text-sm text-gray-400">
-                <li>
-                  <Link
-                    to={"/"}
-                    className="hover:text-teal-400 transition duration-300"
-                  >
-                    Help Center
-                  </Link>
-                </li>
+
                 <li>
                   <Link
                     to={"/info/contact"}

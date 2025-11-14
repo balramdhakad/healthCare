@@ -89,18 +89,15 @@ const PatientAppointments = () => {
   return (
     <div className="bg-gradient-to-br from-gray-50 to-white min-h-screen p-6 md:p-10">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold text-gray-800">My Appointments</h1>
         </div>
-
-        {/* Tabs */}
-        <div className="flex space-x-4 mb-6">
+        <div className=" space-x-4 mb-6">
           {["upcoming", "all", "completed", "cancelled"].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2 rounded-full font-medium transition ${
+              className={`px-4 py-2 rounded-full my-2 font-medium transition ${
                 activeTab === tab
                   ? "bg-teal-600 text-white"
                   : "bg-gray-200 text-gray-700 hover:bg-gray-300"
@@ -122,13 +119,12 @@ const PatientAppointments = () => {
           />
         </div>
 
-        {/* Appointments Table */}
         <AppointmentsTable
           appointments={filteredAppointments}
           onRatingOpen={handleRatingOpen}
         />
 
-        {/* Rating Modal */}
+
         {isModalOpen && selectedAppointment && (
           <RatingModal
             appointment={selectedAppointment}

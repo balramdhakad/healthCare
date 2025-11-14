@@ -27,8 +27,8 @@ export default function Room() {
 
   const roomID = getUrlParams().get("roomID") || randomID(5);
   let myMeeting = async (element) => {
-    const appID = 149548076;
-    const serverSecret = "29303d08b5f066076dee3080bac13e43";
+    const appID = 2013844132;
+    const serverSecret = "c6697e00bc7650e93106cd6fa14b9c55";
     const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
       appID,
       serverSecret,
@@ -37,9 +37,7 @@ export default function Room() {
       name
     );
 
-    // Create instance object from Kit Token.
     const zp = ZegoUIKitPrebuilt.create(kitToken);
-    // start the call
     zp.joinRoom({
       container: element,
       sharedLinks: [

@@ -28,7 +28,7 @@ const features = [
     title: "Order Healthcare Products",
     imageSrc: order,
     linkText: "Shop Now",
-    to: "/order",
+    to: "/Shop",
   },
 ];
 

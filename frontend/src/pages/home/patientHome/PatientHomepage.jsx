@@ -11,10 +11,11 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import axiosInstance from "../../../utilus/axiosInstance";
 import Benefits from "./components/Benefits";
 import PatientProfileMinimal from "../../../components/PatientProfileMinimal";
+import { useQuery } from "@tanstack/react-query";
+import LoadingBar from "../../../components/LoadingBar";
 
 const HorizontalCarousel = ({ title, children, scrollAmount = 300 }) => {
   const carouselRef = useRef(null);
-
 
   const scrollLeft = () => {
     if (carouselRef.current) {
@@ -77,32 +78,33 @@ const HorizontalCarousel = ({ title, children, scrollAmount = 300 }) => {
   );
 };
 
-const PatientHomepage = ({userdata}) => {
-  const [doctors, setDoctors] = useState([]);
-  const [communities, setCommunities] = useState([]);
-  const [feedbacks, setFeedbacks] = useState([]);
-
-  const fetchData = async () => {
+const PatientHomepage = ({ userdata }) => {
+  const fetchTopRated = async () => {
     const response = await axiosInstance.get("/general/top-rated");
-    const data = response.data.data;
-    setDoctors(data.topDoctors);
-    setCommunities(data.topCommunities);
-    setFeedbacks(data.topRatedAppointments);
+    return response.data.data;
   };
+  const { data, isLoading } = useQuery({
+    queryKey: ["topRated"],
+    queryFn: fetchTopRated,
+    staleTime: 5 * 60 * 1000,
+    cacheTime: 30 * 60 * 1000,
+  });
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const doctors = data?.topDoctors || [];
+  const communities = data?.topCommunities || [];
+  const feedbacks = data?.topRatedAppointments || [];
 
   return (
     <div className="bg-gradient-to-b from-gray-50 to-white min-h-screen">
       <div className="container mx-auto px-6 md:px-12 lg:px-20 py-4 space-y-16">
-        {
-          userdata ? 
-          <><PatientProfileMinimal/></> : <></>
-        }
+        {userdata ? (
+          <>
+            <PatientProfileMinimal />
+          </>
+        ) : (
+          <></>
+        )}
         <div className="space-y-0">
-          {/* <SectionTitle title="Features You Will Love" /> */}
           <KeyFeatures />
         </div>
         <TopLevelActions />
@@ -117,20 +119,31 @@ const PatientHomepage = ({userdata}) => {
           <div>
             <SectionTitle title="Top-Rated Doctors" />
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-              {doctors.slice(0, 10).map((doctor) => (
-                <DoctorProfileCard key={doctor._id} doctor={doctor} />
-              ))}
+              {isLoading ? (
+                <div className="w-full">
+
+
+                  <LoadingBar />
+                </div>
+              ) : (
+                doctors
+                  .map((doctor) => (
+                    <DoctorProfileCard key={doctor._id} doctor={doctor} />
+                  ))
+              )}
             </div>
           </div>
 
           <HorizontalCarousel title="Top Communities">
-            {communities.map((community) => (
+            {isLoading ? <LoadingBar/>:
+            
+            communities.map((community) => (
               <CommunityCard key={community._id} community={community} />
             ))}
           </HorizontalCarousel>
 
           <HorizontalCarousel title="Recent Patient Feedback">
-            {feedbacks.map((feedback) => (
+            {isLoading ? <LoadingBar/>:feedbacks.map((feedback) => (
               <FeedbackCard key={feedback._id} feedback={feedback} />
             ))}
           </HorizontalCarousel>

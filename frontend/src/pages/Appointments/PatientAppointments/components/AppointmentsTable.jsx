@@ -22,7 +22,7 @@ const AppointmentsTable = ({ appointments, onRatingOpen }) => {
   );
 
   return (
-    <div className="bg-white shadow-md rounded-lg overflow-hidden">
+    <div className="bg-white shadow-md rounded-lg overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-teal-600 text-white">
           <tr>
@@ -54,15 +54,15 @@ const AppointmentsTable = ({ appointments, onRatingOpen }) => {
                   key={appt._id}
                   className="hover:bg-teal-50 transition duration-150"
                 >
-                  <td className="px-6 py-4 whitespace-nowrap text-lg font-bold text-teal-700">
-                    {appt.time}
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-teal-700">
                     {appt.status === "scheduled" &&
                       appt.isApproved &&
                       appt.estimatedVisitTime && (
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className=" text-red-500 mt-1">
                           Estimated: {FormatTime(appt.estimatedVisitTime)}
                         </p>
                       )}
+                    Slot : {appt?.time}
                   </td>
 
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -88,14 +88,16 @@ const AppointmentsTable = ({ appointments, onRatingOpen }) => {
                       {appt.doctorId.name}
                     </Link>
                     <p className="text-xs text-gray-500 flex items-center">
-                      <IoCalendarOutline className="mr-1" /> {FormatDate(appt.date)}
+                      <IoCalendarOutline className="mr-1" />{" "}
+                      {FormatDate(appt.date)}
                     </p>
                   </td>
 
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 truncate max-w-xs">
                     <p className="truncate">{appt.reasonForVisit || "N/A"}</p>
                     <p className="text-xs text-gray-500 mt-1 flex items-center capitalize">
-                      <FaVideo className="mr-1 text-teal-600" /> {appt.appointmentType}
+                      <FaVideo className="mr-1 text-teal-600" />{" "}
+                      {appt.appointmentType}
                     </p>
                   </td>
 
@@ -123,7 +125,9 @@ const AppointmentsTable = ({ appointments, onRatingOpen }) => {
                     {appt.status === "completed" && appt.rating && (
                       <span className="w-full sm:w-auto text-center px-3 py-2 text-sm font-semibold text-yellow-800 bg-yellow-100 rounded-lg border border-yellow-300 flex items-center justify-center space-x-1">
                         <FaStar className="w-3 h-3 fill-yellow-500 text-yellow-500" />
-                        <span className="ml-1">{appt.rating?.rating?.toFixed(1)}</span>
+                        <span className="ml-1">
+                          {appt.rating?.rating?.toFixed(1)}
+                        </span>
                       </span>
                     )}
                   </td>

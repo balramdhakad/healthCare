@@ -19,7 +19,7 @@ const DoctorTable = ({ doctors, onVerifyToggle }) => {
 
   return (
     <div className="bg-white shadow rounded-lg overflow-hidden">
-      <div className="grid grid-cols-4 font-semibold border-gray-300 border-b p-4 text-gray-700">
+      <div className="hidden md:grid grid-cols-4 font-semibold border-gray-300 border-b p-4 text-gray-700">
         <span>NAME</span>
         <span>EMAIL</span>
         <span>SPECIALIZATION</span>
@@ -29,15 +29,21 @@ const DoctorTable = ({ doctors, onVerifyToggle }) => {
       {doctors.map((doc) => (
         <div
           key={doc._id}
-          className="grid grid-cols-4 items-center border-b p-4 border-gray-300 hover:bg-gray-50 transition"
+          className="border-b border-gray-300 hover:bg-gray-50 transition flex flex-col md:grid md:grid-cols-4 md:items-center p-4"
         >
+
           <span className="font-medium text-gray-800">Dr. {doc.name}</span>
-          <span className="text-gray-600 text-sm">{doc.email}</span>
-          <span className="text-gray-600 text-sm">
+
+          <span className="text-gray-600 text-sm mt-1 md:mt-0">
+            {doc.email}
+          </span>
+
+
+          <span className="text-gray-600 text-sm mt-1 md:mt-0">
             {doc.specialization || "N/A"}
           </span>
 
-          <div className="flex justify-end space-x-2">
+          <div className="flex justify-end space-x-2 mt-2 md:mt-0">
             <Link
               to={`/doctor/${doc._id}`}
               className="px-3 py-1 border rounded-md text-blue-600 border-blue-300 hover:bg-blue-50 transition text-sm"
@@ -50,6 +56,11 @@ const DoctorTable = ({ doctors, onVerifyToggle }) => {
             >
               {doc.verified ? "Unverify" : "Verify"}
             </button>
+          </div>
+
+          <div className="md:hidden text-gray-500 text-sm mt-2">
+            Email: {doc.email} <br />
+            Specialization: {doc.specialization || "N/A"}
           </div>
         </div>
       ))}

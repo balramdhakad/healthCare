@@ -2,15 +2,15 @@ import express from "express";
 import auth from "../../middlewares/authMiddleware.js";
 import {
   loginUser,
-//   registerUser,
-  sendOtpController,
-  verifyOtpController,
+  registerUser,
+  // sendOtpController,
+  // verifyOtpController,
 } from "../../controllers/healthCare/authControllers.js";
 const router = express.Router();
 
-// router.post("/signup", registerUser);
-router.post("/send-otp", sendOtpController);
-router.post("/verify-otp", verifyOtpController);
+router.post("/signup", registerUser);
+// router.post("/send-otp", sendOtpController);
+// router.post("/verify-otp", verifyOtpController);
 router.post("/login", loginUser);
 
 router.get(

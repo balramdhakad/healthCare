@@ -1,13 +1,18 @@
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import { store } from './features/store'
-import { Provider } from 'react-redux'
-import App from './App'
-import { Toaster } from 'react-hot-toast'
+import { createRoot } from "react-dom/client";
+import "./index.css";
+import { store } from "./features/store";
+import { Provider } from "react-redux";
+import App from "./App";
+import { Toaster } from "react-hot-toast";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-createRoot(document.getElementById('root')).render(
+const queryClient = new QueryClient();
+
+createRoot(document.getElementById("root")).render(
   <Provider store={store}>
-    <App />
-    <Toaster />
-  </Provider>,
-)
+    <QueryClientProvider client={queryClient}>
+      <App />
+      <Toaster />
+    </QueryClientProvider>
+  </Provider>
+);

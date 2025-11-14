@@ -10,7 +10,7 @@ const OverviewCards = ({ counts }) => {
   ];
 
   return (
-    <div className="mb-8">
+    <div className="mb-8 p-1">
       <h2 className="text-xl font-semibold mb-3">Overview</h2>
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         {items.map((item) => (

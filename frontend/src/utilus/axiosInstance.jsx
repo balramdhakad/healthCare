@@ -1,7 +1,7 @@
-import axios from "axios"
+import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL : "http://localhost:8080/api",
+  baseURL: "https://healthcare-jgwr.onrender.com/api",
 });
 
-export default axiosInstance
+export default axiosInstance;

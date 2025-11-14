@@ -1,11 +1,4 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { FaUserMd, FaVideo, FaStar } from "react-icons/fa";
-import { IoCalendarOutline } from "react-icons/io5";
-import { CgArrowRight } from "react-icons/cg";
-import FormatDate from "../../../../components/FormateDate";
-import StatusBadge from "../../DoctorAppointments/components/StatusBadge";
-import FormatTime from "../../../../components/FormatTime";
+import AppointmentRow from "./AppointmentRow";
 
 const AppointmentsTable = ({ appointments, onRatingOpen }) => {
   const groupByDate = (list) =>
@@ -20,6 +13,7 @@ const AppointmentsTable = ({ appointments, onRatingOpen }) => {
   const sortedDates = Object.keys(groupedAppointments).sort(
     (a, b) => new Date(b) - new Date(a)
   );
+
 
   return (
     <div className="bg-white shadow-md rounded-lg overflow-x-auto">
@@ -46,7 +40,7 @@ const AppointmentsTable = ({ appointments, onRatingOpen }) => {
             </th>
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-100">
+        {/* <tbody className="bg-white divide-y divide-gray-100">
           {sortedDates.length > 0 ? (
             sortedDates.map((dateKey) =>
               groupedAppointments[dateKey].map((appt) => (
@@ -54,8 +48,10 @@ const AppointmentsTable = ({ appointments, onRatingOpen }) => {
                   key={appt._id}
                   className="hover:bg-teal-50 transition duration-150"
                 >
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-teal-700">
-                    {appt.status === "scheduled" &&
+                  <td className="px-6 py-4 flex whitespace-nowrap text-sm font-bold text-teal-700">
+                    <div className="m-1"><button><IoRefreshCircle size={2}/></button></div>
+                    <div>
+                      {appt.status === "scheduled" &&
                       appt.isApproved &&
                       appt.estimatedVisitTime && (
                         <p className=" text-red-500 mt-1">
@@ -63,6 +59,7 @@ const AppointmentsTable = ({ appointments, onRatingOpen }) => {
                         </p>
                       )}
                     Slot : {appt?.time}
+                    </div>
                   </td>
 
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -141,7 +138,27 @@ const AppointmentsTable = ({ appointments, onRatingOpen }) => {
               </td>
             </tr>
           )}
+        </tbody> */}
+        <tbody className="bg-white divide-y divide-gray-100">
+          {sortedDates.length > 0 ? (
+            sortedDates.map((dateKey) =>
+              groupedAppointments[dateKey].map((appt) => (
+                <AppointmentRow 
+                  key={appt._id} 
+                  appt={appt} 
+                  onRatingOpen={onRatingOpen} 
+                />
+              ))
+            )
+          ) : (
+            <tr>
+              <td colSpan="6" className="px-6 py-6 text-center text-gray-500">
+                No appointments found
+              </td>
+            </tr>
+          )}
         </tbody>
+
       </table>
     </div>
   );

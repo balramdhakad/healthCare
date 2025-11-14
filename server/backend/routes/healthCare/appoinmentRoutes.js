@@ -14,7 +14,7 @@ const router = express.Router();
 router.post("/book", auth("patient"), requestAppointment);
 router.put("/:id", auth("patient","doctor"), updateAppointmentStatus);
 router.get("/:id", auth("patient","doctor"), getAppointmentDetails);
-router.get("/:id/track", auth("patient","doctor"), trackAppointment);
+router.get("/:id/track", auth("patient"), trackAppointment);
 router.put("/:id/approve", auth("doctor"), approveAppointment);
 router.put("/:id/rate", auth("patient"), submitAppointmentRating);
 
